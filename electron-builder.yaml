@@ -1,0 +1,12 @@
+appId: "com.github.netcoder99.electron-next-sample"
+productName: "Electron Next.JS"
+copyright: "Copyright (c) 2025 JDugger"
+win:
+  target: ["dir", "portable", "zip"]
+  icon: "resources/icon.ico"
+linux:
+  target: ["dir", "appimage", "zip"]
+  icon: "resources/icon.png"
+mac:
+  target: ["dir", "dmg", "zip"]
+  icon: "resources/icon.icns"
