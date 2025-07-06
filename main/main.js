@@ -1,12 +1,14 @@
-const { app, BrowserWindow } = require("electron");
-const serve = require("electron-serve");
-const path = require("path");
+const { app, ipcMain, BrowserWindow } = require("electron");
+const  serve = require("electron-serve");
+const  path  = require("path");
+let    log   = require("electron-log")
 
 const appServe = app.isPackaged ? serve({
   directory: path.join(__dirname, "../out")
 }) : null;
 
 const createWindow = () => {
+  log.info("Creating main window");
   const win = new BrowserWindow({
     width: 1000,
     height: 800,
@@ -17,10 +19,11 @@ const createWindow = () => {
   });
 
   if (app.isPackaged) {
-    appServe(win).then(() => {
-      win.loadURL("app://-");
-    });
+    log.info("Running packaged app.");
+    appServe(win)
+      .then(() => {win.loadURL("app://-");});
   } else {
+    log.info("Running development app.");
     win.loadURL("http://localhost:3000");
     win.webContents.openDevTools();
     win.webContents.on("did-fail-load", (e, code, desc) => {
@@ -32,6 +35,10 @@ const createWindow = () => {
 app.on("ready", () => {
     createWindow();
 });
+
+ipcMain.on('addNewRequirement', (event, studentDate) => {
+  console.log(`addNewRequirement was clicked`);
+})  
 
 app.on("window-all-closed", () => {
     if(process.platform !== "darwin"){
