@@ -1,12 +1,15 @@
 const { app, ipcMain, BrowserWindow } = require("electron");
-const  serve = require("electron-serve");
-const  path  = require("path");
-let    log   = require("electron-log")
+const  serve   = require("electron-serve");
+const  path    = require("path");
+const  appRoot = require('app-root-path');
+let    log     = require("electron-log")
 
+// --------------------------------------------------------------------------
 const appServe = app.isPackaged ? serve({
   directory: path.join(__dirname, "../out")
 }) : null;
 
+// --------------------------------------------------------------------------
 const createWindow = () => {
   log.info("Creating main window");
   const win = new BrowserWindow({
@@ -32,16 +35,37 @@ const createWindow = () => {
   }
 }
 
+// --------------------------------------------------------------------------
 app.on("ready", () => {
     createWindow();
 });
 
-ipcMain.on('addNewRequirement', (event, studentDate) => {
-  console.log(`addNewRequirement was clicked`);
-})  
 
+// --------------------------------------------------------------------------
 app.on("window-all-closed", () => {
     if(process.platform !== "darwin"){
         app.quit();
     }
 });
+
+// --------------------------------------------------------------------------
+addRankRequirementPath      = path.join(__dirname, 'ranks', 'rankProcs');
+const {
+  addRankRequirement, 
+  saveRankRequirement, 
+  getRankRequirements, 
+  delRankRequirements
+} = require(addRankRequirementPath);
+ipcMain.handle('handleAddClick', async (event, data) => {
+  return addRankRequirement(data);
+})
+ipcMain.handle('handleSaveClick', async (event, data) => {
+  return saveRankRequirement(data);
+})
+ipcMain.handle('handleGetRequirements', async (event, data) => {
+  return getRankRequirements();
+})
+ipcMain.handle('handleDelRequirements', async (event, index) => {
+  return delRankRequirements(index);
+})
+
