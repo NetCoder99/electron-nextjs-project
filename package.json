@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "concurrently -n \"NEXT,ELECTRON\" -c \"yellow,blue\" --kill-others \"next dev\" \"electron .\"",
     "build": "next build && electron-builder",
-    "rebuild": "electron-rebuild -f -w better-sqlite3",    
+    "rebuild": "electron-rebuild -f -w better-sqlite3",
     "start": "next start",
     "lint": "next lint"
   },
@@ -25,7 +25,8 @@
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.0.0",
-    "react-number-format": "^5.4.4"
+    "react-number-format": "^5.4.4",
+    "sharp": "^0.34.2"
   },
   "devDependencies": {
     "electron": "^37.1.0",

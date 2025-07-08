@@ -20,7 +20,7 @@ export default function manageRanks() {
 
     return (
         <div className="row d-flex justify-content-center small mainForm">
-          <h4 className='text-center'>Manage belts and ranks</h4>
+          <h3 className='text-center'>Manage belts and ranks</h3>
           <ul>
             {beltData.map((item, index) => (
               <li key={index}><RankCard {...item}></RankCard></li>  

@@ -1,8 +1,10 @@
-const { app, ipcMain, BrowserWindow } = require("electron");
+const { app, ipcMain, BrowserWindow, Menu } = require("electron");
 const  serve   = require("electron-serve");
 const  path    = require("path");
 const  appRoot = require('app-root-path');
 let    log     = require("electron-log")
+
+Menu.setApplicationMenu(false)
 
 // --------------------------------------------------------------------------
 const appServe = app.isPackaged ? serve({
@@ -68,4 +70,18 @@ ipcMain.handle('handleGetRequirements', async (event, data) => {
 ipcMain.handle('handleDelRequirements', async (event, index) => {
   return delRankRequirements(index);
 })
+
+// --------------------------------------------------------------------------
+studentsPath        = path.join(__dirname, 'students', 'studentProcs');
+studentPicturesPath = path.join(__dirname, 'students', 'studentPictures');
+const {searchStudentData}    = require(studentsPath);
+const {selectStudentPicture} = require(studentPicturesPath);
+
+ipcMain.handle('handleStudentSearchClick', async (event, data) => {
+  return searchStudentData(data);
+})
+ipcMain.handle('handleSelectPicture', async (event, data) => {
+  return selectStudentPicture(data);
+})
+
 

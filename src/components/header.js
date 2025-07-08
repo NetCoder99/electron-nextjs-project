@@ -24,7 +24,7 @@ const MenuItem = ({ title, path }) => {
 
 const Header = () => {
   return (
-    <Navbar expand="sm" className="bg-body-tertiary navbar navbar-expand-lg navbar-light bg-light">
+    <Navbar fixed="top" expand="sm" className="navbar navbar-header navbar-light bg-light">
       <Container fluid>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

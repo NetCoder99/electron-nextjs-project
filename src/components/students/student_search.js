@@ -1,33 +1,60 @@
-
 import React from "react";
 
-export default function SearchForStudents() {
+import Form       from 'react-bootstrap/Form';
+import Button     from 'react-bootstrap/Button';
 
-  let clickCounter = 0;
-  const handleSearchClick = () => {
-    console.log(`Search button clicked: ${clickCounter++} times`);
-  };
+export default function SearchForStudents({searchData, handleSearchClick, handleFieldBlur, handleCreateClick}) {
 
   return (
-    <form>
-    <div className="row d-flex justify-content-center small form p-3">
+    <form className="mainForm">
+    <div className="row d-flex justify-content-center small form">
       <h3 className="text-center">Search for students</h3>
       <div className="col-sm-1"></div>
-      <div className="col-sm-10">
-        <div className="row m-auto">
-          <div className="col-sm-3 mb-3" style={{width : "11rem"}}>
-            <input type="text" className="form-control form-control-sm" id="srchFirstName" placeholder="First Name"/>
-          </div>
-          <div className="col-sm-3 mb-3"  style={{width : "11rem"}}>
-            <input type="text" className="form-control form-control-sm" id="srchLastName" placeholder="Last Name" />
-          </div>
-          <div className="col-sm-3 mb-3"  style={{width : "11rem"}}>
-            <input type="text" className="form-control form-control-sm" id="srchBadgeNumber" placeholder="Badge" />
-          </div>
-          <div className="col-sm-3 mb-3 ">
-            <button id="searchButton" className="btn btn-success btn-sm " type="button" onClick={handleSearchClick}>Search</button>
-          </div>
-          <div className="col-sm-1"></div>
+      <div className="col-sm-10 m-auto">
+        <div className="row ">
+            <Form.Control
+              type="text"
+              className='smaller-input'
+              style={{width: "11rem"}}
+              size="sm"
+              placeholder="First Name"
+              defaultValue={searchData.firstName}
+              onBlur={(e) => handleFieldBlur('firstName', e.target.value)}
+            />
+            <Form.Control
+              type="text"
+              className='smaller-input ms-3'
+              style={{width: "11rem"}}
+              size="md"
+              placeholder="Last Name"
+              defaultValue={searchData.lastName}
+              onBlur={(e) => handleFieldBlur('lastName', e.target.value)}
+            />
+            <Form.Control
+              type="text"
+              className='smaller-input ms-3'
+              style={{width: "11rem"}}
+              size="sm"
+              placeholder="Badge Number"
+              defaultValue={searchData.badgeNumber}
+              onBlur={(e) => handleFieldBlur('badgeNumber', e.target.value)}
+            />
+            <Button 
+              variant="success"
+              className='smaller-input ms-3'
+              style={{width: "4rem"}}
+              size="sm"
+              onClick={() => handleSearchClick()}>  
+            Search
+            </Button>            
+            <Button 
+              variant="success"
+              className='smaller-input ms-3'
+              style={{width: "4rem"}}
+              size="sm"
+              onClick={() => handleCreateClick()}>  
+            Create
+            </Button>            
           <span id="searchMessage" className="text-success fw-bold" >Search messages</span>
         </div>
       </div>
