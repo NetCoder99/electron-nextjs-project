@@ -1,31 +1,7 @@
 const path     = require("path");
-const appRoot  = require('app-root-path');
 const sqlite3  = require('better-sqlite3');
 const getDatabaseLocationPath = path.join(__dirname, '..', 'data', 'common');
-const {getDatabaseLocation} = require(getDatabaseLocationPath);
-
-const studentFields = {
-  'badgeNumber'  : -1,
-  'firstName'    : '',
-  'lastName'     : '',
-  'namePrefix'   : '',
-  'email'        : '',
-  'address'      : '',
-  'address2'     : '',
-  'city'         : '',
-  'country'      : '',
-  'state'        : '',
-  'zip'          : '',
-  'birthDate'    : '',
-  'phoneHome'    : '',
-  'phoneMobile'  : '',
-  'status'       : '',
-  'memberSince'  : '',
-  'gender'       : '',
-  'currentRank'  : '',
-  'ethnicity'    : ''
-}
-
+const {getDatabaseLocation}   = require(getDatabaseLocationPath);
 
 // ----------------------------------------------------------------------------------------------
 const searchStudentStmt = `
@@ -50,17 +26,68 @@ const searchStudentStmt = `
        ,ifnull(currentRank, '') as currentRank
        ,ifnull(ethnicity,   '') as ethnicity
        ,studentImage            as studentImage
-       ,imageBase64             as imageBase64
+       ,ifnull(imageBase64, 
+        (select imageBase64 
+         from assets a 
+         where imageName = 'RSM_Logo2.webp'
+         ))             as imageBase64       
   FROM  students
-  where badgeNumber = :badgeNumber
 `
-function searchStudentData(searchData) {
+//-------------------------------------------------------------------------------------------
+function searchStudentDataByBadge(searchData) {
   console.log(`searchStudentData : searchData -> ${JSON.stringify(searchData)}`);
+  const whereClause = `
+    where  badgeNumber = :badgeNumber'
+  `
   try {
     const db_directory = getDatabaseLocation();
     const db           = new sqlite3(db_directory); 
-    const searchStmt   = db.prepare(searchStudentStmt);
-    const rows          = searchStmt.all({'badgeNumber' : 1609});
+    const searchStmt   = db.prepare(searchStudentStmt + whereClause);
+    const rows         = searchStmt.all({'badgeNumber' : 1609});
+    db.close();
+    return rows;
+  } catch (err) {
+    console.error('Error searching by by badge', err); throw err; 
+  } 
+}
+
+//-------------------------------------------------------------------------------------------
+function countStudentsByName(searchData, useLike=false) {
+  console.log(`searchStudentData : searchData -> ${JSON.stringify(searchData)}`);
+  try {
+    const whereClause = `
+      where  lower(firstName)   = lower(:firstName)
+      and    lower(lastName)    = lower(:lastName)
+    `
+    const db_directory = getDatabaseLocation();
+    const db           = new sqlite3(db_directory); 
+    const searchStmt   = db.prepare(searchStudentStmt + whereClause);
+    const rows         = searchStmt.all({
+      'firstName'  : searchData.firstName.toLowerCase(), 
+      'lastName'   : searchData.lastName.toLowerCase()
+    });
+    db.close();
+    return rows;
+  } catch (err) {
+    console.error('Error searching by by badge', err); throw err; 
+  } 
+}
+
+//-------------------------------------------------------------------------------------------
+function searchStudentDataByName(searchData) {
+  console.log(`searchStudentDataByName : searchData -> ${JSON.stringify(searchData)}`);
+  try {
+    const whereClause = `
+      where  lower(firstName)   like :firstName
+      and    lower(lastName)    like :lastName
+    `
+    const db_directory = getDatabaseLocation();
+    const db           = new sqlite3(db_directory); 
+    const searchStmt   = db.prepare(searchStudentStmt + whereClause);
+    const rows         = searchStmt.all({
+      'firstName' : searchData.firstName.toLowerCase() + '%', 
+      'lastName'  : searchData.lastName.toLowerCase()  + '%'
+    });
     db.close();
     return rows;
   } catch (err) {
@@ -69,5 +96,7 @@ function searchStudentData(searchData) {
 }
 
 module.exports = {
-  searchStudentData, 
+  countStudentsByName,
+  searchStudentDataByBadge,
+  searchStudentDataByName, 
 }

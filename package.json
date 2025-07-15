@@ -24,6 +24,7 @@
     "next": "15.3.4",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.10",
+    "react-datepicker": "^8.4.0",
     "react-dom": "^19.0.0",
     "react-number-format": "^5.4.4",
     "sharp": "^0.34.2"

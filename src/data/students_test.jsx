@@ -1,4 +1,3 @@
-function AddRequimentRow(beltRankDetails) {
-  console.log(`beltRankDetails: ${beltRankDetails}`);
-
-}
+// function AddRequimentRow(beltRankDetails) {
+//   console.log(`beltRankDetails: ${beltRankDetails}`);
+// }

@@ -74,14 +74,27 @@ ipcMain.handle('handleDelRequirements', async (event, index) => {
 // --------------------------------------------------------------------------
 studentsPath        = path.join(__dirname, 'students', 'studentProcs');
 studentPicturesPath = path.join(__dirname, 'students', 'studentPictures');
-const {searchStudentData}    = require(studentsPath);
-const {selectStudentPicture} = require(studentPicturesPath);
+const {searchStudentDataByName}  = require(studentsPath);
+const {selectStudentPicture}     = require(studentPicturesPath);
+//const {getStudentFields}     = require(path.join(__dirname, 'students', 'studentFields'));
+const {StudentFields}  = require(path.join(__dirname, 'students', 'studentClass'));
+
+ipcMain.handle('handleGetStudentFields', async (event) => {
+  const studentFields = new StudentFields();
+  //const studentFieldsResponse = new StudentFieldsResponse();
+  console.log(`handleGetStudentFields: ${JSON.stringify(studentFields)}`);
+  return studentFields;
+})
 
 ipcMain.handle('handleStudentSearchClick', async (event, data) => {
-  return searchStudentData(data);
+  return searchStudentDataByName(data);
 })
 ipcMain.handle('handleSelectPicture', async (event, data) => {
   return selectStudentPicture(data);
+})
+const {createStudentRecord}   = require(path.join(__dirname, 'students', 'studentCreate'));
+ipcMain.handle('handleSaveCreate', async (event, data) => {
+  return createStudentRecord(data);
 })
 
 

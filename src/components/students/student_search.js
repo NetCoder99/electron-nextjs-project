@@ -55,10 +55,13 @@ export default function SearchForStudents({searchData, handleSearchClick, handle
               onClick={() => handleCreateClick()}>  
             Create
             </Button>            
-          <span id="searchMessage" className="text-success fw-bold" >Search messages</span>
+          <span id="searchMessage" className="text-success fw-bold" ></span>
         </div>
       </div>
-    </div>  
+      <div style={{paddingLeft: "5rem", paddingRight: "5rem"}}>
+        <hr className="mt-5" ></hr>
+      </div>
+    </div>
     </form>    
     )
 }

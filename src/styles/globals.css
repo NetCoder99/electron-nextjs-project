@@ -17,6 +17,15 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
+.invalid {
+  border: 2px solid red !important;
+}
+
+.valid {
+  border: 2px solid green;
+}
+
+
 .smaller-input {
   font-size: 12px;
   padding: 4px 8px;
