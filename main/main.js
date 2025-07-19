@@ -1,7 +1,7 @@
 const { app, ipcMain, BrowserWindow, Menu } = require("electron");
 const  serve   = require("electron-serve");
 const  path    = require("path");
-const  appRoot = require('app-root-path');
+//const  appRoot = require('app-root-path');
 let    log     = require("electron-log")
 
 Menu.setApplicationMenu(false)
@@ -72,18 +72,18 @@ ipcMain.handle('handleDelRequirements', async (event, index) => {
 })
 
 // --------------------------------------------------------------------------
-studentsPath        = path.join(__dirname, 'students', 'studentProcs');
+studentsPath        = path.join(__dirname, 'students', 'studentSearchProcs');
 studentPicturesPath = path.join(__dirname, 'students', 'studentPictures');
+const {getStudentFieldsByBadge}  = require(studentsPath);
 const {searchStudentDataByName}  = require(studentsPath);
 const {selectStudentPicture}     = require(studentPicturesPath);
-//const {getStudentFields}     = require(path.join(__dirname, 'students', 'studentFields'));
-const {StudentFields}  = require(path.join(__dirname, 'students', 'studentClass'));
 
-ipcMain.handle('handleGetStudentFields', async (event) => {
-  const studentFields = new StudentFields();
-  //const studentFieldsResponse = new StudentFieldsResponse();
-  console.log(`handleGetStudentFields: ${JSON.stringify(studentFields)}`);
-  return studentFields;
+
+// ipcMain.handle('handleGetStudentImage', async (event, searchData) => {
+//   return getStudentImageByBadge(searchData);
+// })
+ipcMain.handle('handleGetStudentFields', async (event, searchData) => {
+  return getStudentFieldsByBadge(searchData);
 })
 
 ipcMain.handle('handleStudentSearchClick', async (event, data) => {
@@ -92,9 +92,9 @@ ipcMain.handle('handleStudentSearchClick', async (event, data) => {
 ipcMain.handle('handleSelectPicture', async (event, data) => {
   return selectStudentPicture(data);
 })
-const {createStudentRecord}   = require(path.join(__dirname, 'students', 'studentCreate'));
+const {saveStudentData} = require(path.join(__dirname, 'students', 'studentCreate'));
 ipcMain.handle('handleSaveCreate', async (event, data) => {
-  return createStudentRecord(data);
+  return saveStudentData(data);
 })
 
 

@@ -9,11 +9,9 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
   console.log(`ManageStudent searchData: ${JSON.stringify(searchData)}`);
 
   // -------------------------------------------------------------------------------
-  const [studentFields,  setStudentFields]  = useState({});
-  const [displayOptions, setDisplayOptions] = useState({
-    headerMessage: "Student details",
-  });
-  const [imageResponse, setImageResponse] = useState({
+  const [studentFields,  setStudentFields ]  = useState({});
+  const [displayOptions, setDisplayOptions]  = useState({headerMessage: "Student details"});
+  const [imageResponse,  setImageResponse ]  = useState({
     status: "",
     message: "Awaiting input...",
     text_style: "h5 text-dark",
@@ -35,16 +33,29 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
       newDisplayOptions.headerMessage = "Updating a student record.";
       setDisplayOptions(newDisplayOptions);
     }
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    const setInitialFieldDefs = async () => {
-      const studentFields = await window.electronAPI.invokeMain(
-        "handleGetStudentFields"
-      );
-      setStudentFields(studentFields);
-      console.log(`studentFieldsDef: ${JSON.stringify(studentFields)}`);
-    };
     setInitialFieldDefs();
+    getStudentPicture();
   }, []);
+
+  // -------------------------------------------------------------------------------
+  async function getStudentPicture() {
+    console.log(`getStudentPicture invoked`);
+
+  }
+
+  // -------------------------------------------------------------------------------
+  async function setInitialFieldDefs() {
+    const studentFields = await window.electronAPI.invokeMain(
+      "handleGetStudentFields", searchData
+    );
+    console.log(`studentFieldsDef: ${JSON.stringify(studentFields)}`);
+    if (Array.isArray(studentFields)) {
+      setStudentFields(studentFields[0]);  
+    }
+    else {
+      setStudentFields(studentFields);
+    }
+  };
 
   // -------------------------------------------------------------------------------
   const handleSelectPicture = async (image_src) => {
@@ -53,6 +64,14 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
       "handleSelectPicture",
       image_src
     );
+    const tmpStudentFields = { ...studentFields };
+    //tmpStudentFields.imageBase64 = response.image_string;
+    tmpStudentFields.studentImageName    = response.image_name;
+    tmpStudentFields.studentImagePath    = response.image_path;
+    tmpStudentFields.studentimageBase64  = response.image_string;
+    
+
+    setStudentFields(tmpStudentFields);
     setImageResponse(response);
   };
   const handleFieldBlur = async (fieldName, value) => {
@@ -63,15 +82,12 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
   };
   const handleSaveClick = async () => {
     console.log(`handleSaveClick: ${JSON.stringify(studentFields)}`);
-    //studentFields.imageSrc    = imageResponse.image_src;
-    studentFields.imageName   = imageResponse.image_name;
-    studentFields.imagePath   = imageResponse.image_path;
-    //studentFields.imageString = imageResponse.image_string;
     const saveResponse = await window.electronAPI.invokeMain(
       "handleSaveCreate",
       studentFields
     );
-    console.log(`handleSaveClick saveResponse: ${JSON.stringify(saveResponse)}`);
+    //console.log(`handleSaveClick saveResponse: ${JSON.stringify(saveResponse)}`);
+    console.log(`handleSaveClick saveResponse`);
     setStudentFields(saveResponse);
   };
 
@@ -111,7 +127,7 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
           </div>
           <div style={{ height: "250px" }}>
             <Image
-              src={imageResponse.image_src}
+              src={`data:image/${studentFields.studentImageType};base64,${studentFields.studentimageBase64}`}
               rounded
               style={{ height: "250px" }}
             />
@@ -129,7 +145,7 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
               style={{ backgroundColor: "#D3D3D3", width: "14rem" }}
             >
               <label>Student #</label>
-              <label id="badgeNumberLbl">99999</label>
+              <label id="badgeNumberLbl">{studentFields.badgeNumber}</label>
             </div>
             <div
               className="mt-2 p-1 fw-bold border rounded"

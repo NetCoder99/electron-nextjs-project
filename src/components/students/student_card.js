@@ -3,9 +3,10 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 function StudentListCard({studentData, handleEditClick}) {
-  const handleSelectClick = async (badgeNumber) => {
-    console.log(`Select event: ${badgeNumber}`);
-  };
+  //console.log(`StudentListCard`);
+  // const handleSelectClick = async (badgeNumber) => {
+  //   console.log(`Select event: ${badgeNumber}`);
+  // };
 
   const buttonStyle = {
     cursor: "pointer",
@@ -24,7 +25,7 @@ function StudentListCard({studentData, handleEditClick}) {
       onClick={() => handleEditClick(studentData.badgeNumber)}
     >
       <Row style={buttonStyle}>
-        <Col sm={2}><img src={`data:image/jpeg;base64,${studentData.imageBase64}`} alt="No image found" height={75} /></Col>
+        <Col sm={2}><img src={`data:image/${studentData.studentImageType};base64,${studentData.studentimageBase64}`} alt="No image found" height={75} /></Col>
         <Col className="pt-3">
           <Row>
             <Col sm={2} className="text-left border-bottom ">

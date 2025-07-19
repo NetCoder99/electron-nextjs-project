@@ -1,7 +1,9 @@
 const path     = require("path");
 const sqlite3  = require('better-sqlite3');
+//const { StudentFields } = require("./studentClass");
 const getDatabaseLocationPath = path.join(__dirname, '..', 'data', 'common');
 const {getDatabaseLocation}   = require(getDatabaseLocationPath);
+const {formatDisplayDate}     = require(path.join(__dirname, '..', 'common', 'format_date'));
 
 // ----------------------------------------------------------------------------------------------
 const searchStudentStmt = `
@@ -25,14 +27,36 @@ const searchStudentStmt = `
        ,ifnull(gender,      '') as gender
        ,ifnull(currentRank, '') as currentRank
        ,ifnull(ethnicity,   '') as ethnicity
-       ,studentImage            as studentImage
-       ,ifnull(imageBase64, 
-        (select imageBase64 
-         from assets a 
-         where imageName = 'RSM_Logo2.webp'
-         ))             as imageBase64       
+       ,ifnull(studentImagePath,   '') as studentImagePath
+       ,ifnull(studentImageName,   '') as studentImageName
+       ,ifnull(studentimageBase64, 
+        (select imageType 
+         from   assets a 
+         where  imageName = 'RSM_Logo2.webp'
+         )) as studentImageType       
+       ,ifnull(studentimageBase64, 
+           (select imageBase64 
+            from   assets a 
+            where  imageName = 'RSM_Logo2.webp'
+            )) as studentimageBase64       
   FROM  students
 `
+//-------------------------------------------------------------------------------------------
+function convertBirthDates(studentData) {
+  console.log(`convertBithDates`);
+  if (Array.isArray(studentData)) {
+    studentData.forEach((studentFields) => {
+      const dateObject = new Date(studentFields.birthDate);
+      //const formatDate = formatDisplayDate(dateObject);
+      studentFields.birthDate = formatDisplayDate(dateObject);
+    })  
+  } else {
+    const dateObject = new Date(studentData.birthDate);
+    studentData.birthDate = formatDisplayDate(dateObject);
+    //console.log(`dateObject: ${dateObject}`);
+  }
+}
+
 //-------------------------------------------------------------------------------------------
 function searchStudentDataByBadge(searchData) {
   console.log(`searchStudentData : searchData -> ${JSON.stringify(searchData)}`);
@@ -44,6 +68,7 @@ function searchStudentDataByBadge(searchData) {
     const db           = new sqlite3(db_directory); 
     const searchStmt   = db.prepare(searchStudentStmt + whereClause);
     const rows         = searchStmt.all({'badgeNumber' : 1609});
+    convertBirthDates(rows);
     db.close();
     return rows;
   } catch (err) {
@@ -67,6 +92,7 @@ function countStudentsByName(searchData, useLike=false) {
       'lastName'   : searchData.lastName.toLowerCase()
     });
     db.close();
+    convertBirthDates(rows);
     return rows;
   } catch (err) {
     console.error('Error searching by by badge', err); throw err; 
@@ -89,6 +115,33 @@ function searchStudentDataByName(searchData) {
       'lastName'  : searchData.lastName.toLowerCase()  + '%'
     });
     db.close();
+    convertBirthDates(rows);
+    return rows;
+  } catch (err) {
+    console.error('Error searching by by badge', err); throw err; 
+  } 
+}
+
+//-------------------------------------------------------------------------------------------
+function getStudentFieldsByBadge(searchData) {
+  const db_directory = getDatabaseLocation();
+  const db           = new sqlite3(db_directory); 
+  
+  let whereClause  = ` where  badgeNumber = :badgeNumber`
+  if (!searchData) {
+    const searchStmt   = db.prepare(searchStudentStmt + ` where 2 = 1`);
+    const rows         = searchStmt.all();
+    db.close();
+    return rows;
+  }
+
+  console.log(`getStudentFieldsByBadge : searchData -> ${JSON.stringify(searchData)}`);
+  try {
+    const whereClause  = ` where  badgeNumber = :badgeNumber`
+    const searchStmt   = db.prepare(searchStudentStmt + whereClause);
+    const rows         = searchStmt.get({'badgeNumber' : searchData.badgeNumber});
+    db.close();
+    convertBirthDates(rows);
     return rows;
   } catch (err) {
     console.error('Error searching by by badge', err); throw err; 
@@ -99,4 +152,5 @@ module.exports = {
   countStudentsByName,
   searchStudentDataByBadge,
   searchStudentDataByName, 
+  getStudentFieldsByBadge
 }
