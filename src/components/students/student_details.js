@@ -1,12 +1,15 @@
 import React   from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Form    from "react-bootstrap/Form";
 import Button  from "react-bootstrap/Button";
 import Image   from "react-bootstrap/Image";
 
-export default function ManageStudent({ editMode, handleReturnClick, searchData }) {
+export default function ManageStudent({ editMode, handleReturnClick, studentData }) {
   console.log(`ManageStudent editMode:   ${JSON.stringify(editMode)}`);
-  console.log(`ManageStudent searchData: ${JSON.stringify(searchData)}`);
+  console.log(`ManageStudent searchData: ${JSON.stringify(studentData)}`);
+
+  // -------------------------------------------------------------------------------
+  const inputRefs = useRef({});
 
   // -------------------------------------------------------------------------------
   const [studentFields,  setStudentFields ]  = useState({});
@@ -34,19 +37,17 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
       setDisplayOptions(newDisplayOptions);
     }
     setInitialFieldDefs();
-    getStudentPicture();
   }, []);
 
   // -------------------------------------------------------------------------------
-  async function getStudentPicture() {
-    console.log(`getStudentPicture invoked`);
-
-  }
-
-  // -------------------------------------------------------------------------------
   async function setInitialFieldDefs() {
+    console.log(`setInitialFieldDefs invoked`);
+    const passData = {
+      'searchFields' : studentData,
+      'editMode'     : editMode
+    }
     const studentFields = await window.electronAPI.invokeMain(
-      "handleGetStudentFields", searchData
+      "handleStudentSearchClick", passData
     );
     console.log(`studentFieldsDef: ${JSON.stringify(studentFields)}`);
     if (Array.isArray(studentFields)) {
@@ -65,12 +66,9 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
       image_src
     );
     const tmpStudentFields = { ...studentFields };
-    //tmpStudentFields.imageBase64 = response.image_string;
     tmpStudentFields.studentImageName    = response.image_name;
     tmpStudentFields.studentImagePath    = response.image_path;
     tmpStudentFields.studentimageBase64  = response.image_string;
-    
-
     setStudentFields(tmpStudentFields);
     setImageResponse(response);
   };
@@ -86,9 +84,11 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
       "handleSaveCreate",
       studentFields
     );
-    //console.log(`handleSaveClick saveResponse: ${JSON.stringify(saveResponse)}`);
     console.log(`handleSaveClick saveResponse`);
     setStudentFields(saveResponse);
+    if (saveResponse.focusField) {
+      inputRefs.current[saveResponse.focusField].focus();
+    }
   };
 
   // -------------------------------------------------------------------------------
@@ -171,6 +171,7 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
                 size="sm"
                 style={{ width: "11rem" }}
                 onBlur={(e) => handleFieldBlur("firstName", e.target.value)}
+                ref={(el) => (inputRefs.current['firstName'] = el)}
               />
             </div>
             <div
@@ -190,8 +191,7 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
             </div>
             <div
               className="mb-3 ms-3 d-inline-block text-start"
-              style={{ width: "11rem" }}
-            >
+              style={{ width: "11rem" }}>
               <label>Last Name</label>
               <Form.Control
                 placeholder="Last Name"
@@ -200,26 +200,32 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
                 size="sm"
                 style={{ width: "11rem" }}
                 onBlur={(e) => handleFieldBlur("lastName", e.target.value)}
+                ref={(el) => (inputRefs.current['lastName'] = el)}
               />
             </div>
           </div>
 
           <div className="col mb-3 text-start">
-            <label htmlFor="address" className="">
-              Address<span className="text-muted">(Optional)</span>
-            </label>
+            <div>
+              <label className="">
+                Address<span className="text-muted">(Optional)</span>
+              </label>
+            </div>
+            <div>
             <Form.Control
               placeholder="1234 Main St"
               defaultValue={studentFields.address}
-              className="d-inline-block float-left"
+              className=""
               size="sm"
               style={{ width: "35rem" }}
               onBlur={(e) => handleFieldBlur("address", e.target.value)}
-            />
+              ref={(el) => (inputRefs.current['address'] = el)}
+              />
+            </div>
           </div>
 
           <div className="mb-3 text-start">
-            <label htmlFor="address2">
+            <label htmlFor="address2" className="d-block">
               Address 2 <span className="text-muted">(Optional)</span>
             </label>
             <Form.Control
@@ -229,11 +235,12 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
               size="sm"
               style={{ width: "35rem" }}
               onBlur={(e) => handleFieldBlur("address2", e.target.value)}
+              ref={(el) => (inputRefs.current['address2'] = el)}
             />
           </div>
 
           <div className="mb-3 text-start">
-            <label htmlFor="city">
+            <label htmlFor="city" className=" d-block">
               City<span className="text-muted">(Optional)</span>
             </label>
             <Form.Control
@@ -243,6 +250,7 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
               size="sm"
               style={{ width: "35rem" }}
               onBlur={(e) => handleFieldBlur("city", e.target.value)}
+              ref={(el) => (inputRefs.current['city'] = el)}
             />
           </div>
 
@@ -257,7 +265,8 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
                 className="d-inline-block float-left"
                 size="sm"
                 onBlur={(e) => handleFieldBlur("state", e.target.value)}
-              />
+                ref={(el) => (inputRefs.current['state'] = el)}
+                />
             </div>
             <div className="mb-3 ms-3 d-inline-block w-25">
               <label htmlFor="zipCode">
@@ -269,6 +278,7 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
                 className="d-inline-block float-left"
                 size="sm"
                 onBlur={(e) => handleFieldBlur("zip", e.target.value)}
+                ref={(el) => (inputRefs.current['zip'] = el)}
               />
             </div>
             <div
@@ -283,6 +293,7 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
                 className={`d-inline-block float-left ${studentFields.birthDateClass}`}
                 size="sm"
                 onBlur={(e) => handleFieldBlur("birthDate", e.target.value)}
+                ref={(el) => (inputRefs.current['birthDate'] = el)}
               />
             </div>
           </div>
@@ -299,6 +310,7 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
                 className="d-inline-block float-left"
                 size="sm"
                 onBlur={(e) => handleFieldBlur("phoneHome", e.target.value)}
+                ref={(el) => (inputRefs.current['phoneHome'] = el)}
               />
             </div>
             <div className="mb-3 ms-3 w-50 d-inline-block">
@@ -312,6 +324,7 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
                 className="d-inline-block float-left"
                 size="sm"
                 onBlur={(e) => handleFieldBlur("email", e.target.value)}
+                ref={(el) => (inputRefs.current['email'] = el)}
               />
             </div>
           </div>

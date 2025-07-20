@@ -2,9 +2,8 @@ import React from "react";
 import { useEffect, useState } from 'react';
 
 import SearchForStudents from "../components/students/student_search";
-import StudentListCard from "../components/students/student_card";
-
-import ManageStudent from "../components/students/student_details";
+import StudentListCard   from "../components/students/student_card";
+import ManageStudent     from "../components/students/student_details";
 
 export default function manageStudents() {
   // ----------------------------------------------------------------------
@@ -31,19 +30,9 @@ export default function manageStudents() {
     };
     setInitialFieldDefs();
   }, []);
-
+  
   // ----------------------------------------------------------------------
-  const handleFieldBlur = (fieldName, newValue) => {
-    //console.log(`handleFieldBlur: ${fieldName} :: ${newValue}`);
-    const newData = {...searchData};
-    newData[fieldName] = newValue;
-    setSearchData(newData);
-  };
-
-  // ----------------------------------------------------------------------
-  let clickCounter = 0;
   const handleSearchClick = async () => {
-    //console.log(`Search button clicked: ${clickCounter++} times`);
     const response = await window.electronAPI.invokeMain('handleStudentSearchClick', {...searchData});
     console.log(`Search response: ${JSON.stringify(response)} times`);
   };  
@@ -58,6 +47,13 @@ export default function manageStudents() {
     setSearchData ({firstName: '',lastName: '',badgeNumber: badgeNumber});
     setEditMode   ({isCreating:false,isEditing:true,isSearching:false});
   };
+  // ----------------------------------------------------------------------
+  const handleFieldBlur = (fieldName, newValue) => {
+    const newData = {...searchData};
+    newData[fieldName] = newValue;
+    setSearchData(newData);
+  };
+
 
   if (editMode.isSearching) {
     return (
