@@ -78,7 +78,7 @@ function searchStudents(searchData) {
       if (searchData.editMode.isCreating) {
         return getEmptyStudentFields();
       } else {
-        return getStudentFieldsByBadge(searchData);
+        return getStudentFieldsByBadge(searchData.searchFields);
       }    
     } else {
       return searchStudentDataByName(searchData);
@@ -107,50 +107,6 @@ function getEmptyStudentFields() {
   } 
 }
 
-
-
-// //-------------------------------------------------------------------------------------------
-// function searchStudentDataByBadge(searchData) {
-//   console.log(`searchStudentData : searchData -> ${JSON.stringify(searchData)}`);
-//   const whereClause = `
-//     where  badgeNumber = :badgeNumber'
-//   `
-//   try {
-//     const db_directory = getDatabaseLocation();
-//     const db           = new sqlite3(db_directory); 
-//     const searchStmt   = db.prepare(searchStudentStmt + whereClause);
-//     const rows         = searchStmt.all({'badgeNumber' : 1609});
-//     convertBirthDates(rows);
-//     db.close();
-//     return rows;
-//   } catch (err) {
-//     console.error('Error searching by by badge', err); throw err; 
-//   } 
-// }
-
-// //-------------------------------------------------------------------------------------------
-// function countStudentsByName(searchData, useLike=false) {
-//   console.log(`searchStudentData : searchData -> ${JSON.stringify(searchData)}`);
-//   try {
-//     const whereClause = `
-//       where  lower(firstName)   = lower(:firstName)
-//       and    lower(lastName)    = lower(:lastName)
-//     `
-//     const db_directory = getDatabaseLocation();
-//     const db           = new sqlite3(db_directory); 
-//     const searchStmt   = db.prepare(searchStudentStmt + whereClause);
-//     const rows         = searchStmt.all({
-//       'firstName'  : searchData.firstName.toLowerCase(), 
-//       'lastName'   : searchData.lastName.toLowerCase()
-//     });
-//     db.close();
-//     convertBirthDates(rows);
-//     return rows;
-//   } catch (err) {
-//     console.error('Error searching by by badge', err); throw err; 
-//   } 
-// }
-
 //-------------------------------------------------------------------------------------------
 // Support the search screen 
 //-------------------------------------------------------------------------------------------
@@ -174,6 +130,30 @@ function searchStudentDataByName(searchData) {
     return rows;
   } catch (err) {
     console.error('Error searching by by badge', err); throw err; 
+  } 
+}
+
+
+//-------------------------------------------------------------------------------------------
+// Support the edit screen 
+//-------------------------------------------------------------------------------------------
+function getStudentFieldsByBadge(searchData) {
+  console.log(`getStudentDataByName : searchData -> ${JSON.stringify(searchData)}`);
+  try {
+    const whereClause = `
+      where  badgeNumber    = :badgeNumber
+    `
+    const db_directory = getDatabaseLocation();
+    const db           = new sqlite3(db_directory); 
+    const searchStmt   = db.prepare(searchStudentStmt + whereClause);
+    const row          = searchStmt.get({
+      'badgeNumber' : searchData.badgeNumber 
+    });
+    db.close();
+    convertBirthDates(row);
+    return row;
+  } catch (err) {
+    console.error('Error searching by name: ', err); throw err; 
   } 
 }
 

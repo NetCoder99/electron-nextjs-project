@@ -33,8 +33,9 @@ export default function manageStudents() {
   
   // ----------------------------------------------------------------------
   const handleSearchClick = async () => {
-    const response = await window.electronAPI.invokeMain('handleStudentSearchClick', {...searchData});
-    console.log(`Search response: ${JSON.stringify(response)} times`);
+    const searchResponse = await window.electronAPI.invokeMain('handleStudentSearchClick', {...searchData});
+    //console.log(`Search response: ${JSON.stringify(searchResponse)} times`);
+    setStudentList(searchResponse);
   };  
   const handleReturnClick = () => {
     setEditMode({isCreating:false,isEditing:false,isSearching:true});
@@ -45,7 +46,7 @@ export default function manageStudents() {
   const handleEditClick = (badgeNumber) => {
     console.log(`handleEditClick: ${badgeNumber}`);
     setSearchData ({firstName: '',lastName: '',badgeNumber: badgeNumber});
-    setEditMode   ({isCreating:false,isEditing:true,isSearching:false});
+    setEditMode   ({isCreating:false, isEditing:true, isSearching:false});
   };
   // ----------------------------------------------------------------------
   const handleFieldBlur = (fieldName, newValue) => {
@@ -76,7 +77,11 @@ export default function manageStudents() {
       </>
     )
   } else if (editMode.isCreating) {
-    return (<ManageStudent editMode={editMode} handleReturnClick={handleReturnClick}></ManageStudent>)
+    return (<ManageStudent 
+      editMode={editMode} 
+      handleReturnClick={handleReturnClick}
+      searchData={searchData}>
+    </ManageStudent>)
   } else if (editMode.isEditing) {
     return (<ManageStudent 
         editMode={editMode} 

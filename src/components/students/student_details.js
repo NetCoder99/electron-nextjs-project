@@ -4,9 +4,9 @@ import Form    from "react-bootstrap/Form";
 import Button  from "react-bootstrap/Button";
 import Image   from "react-bootstrap/Image";
 
-export default function ManageStudent({ editMode, handleReturnClick, studentData }) {
+export default function ManageStudent({ editMode, handleReturnClick, searchData }) {
   console.log(`ManageStudent editMode:   ${JSON.stringify(editMode)}`);
-  console.log(`ManageStudent searchData: ${JSON.stringify(studentData)}`);
+  console.log(`ManageStudent searchData: ${JSON.stringify(searchData)}`);
 
   // -------------------------------------------------------------------------------
   const inputRefs = useRef({});
@@ -43,7 +43,7 @@ export default function ManageStudent({ editMode, handleReturnClick, studentData
   async function setInitialFieldDefs() {
     console.log(`setInitialFieldDefs invoked`);
     const passData = {
-      'searchFields' : studentData,
+      'searchFields' : searchData,
       'editMode'     : editMode
     }
     const studentFields = await window.electronAPI.invokeMain(

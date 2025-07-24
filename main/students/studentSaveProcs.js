@@ -1,9 +1,9 @@
 const path     = require("path");
 const sqlite3  = require('better-sqlite3');
 const {getDatabaseLocation}    = require(path.join(__dirname, '..', 'data', 'common'));
+const {formatCheckinDate}      = require(path.join(__dirname, '..', 'common', 'format_date'));
 const {validateStudentFields}  = require(path.join(__dirname, 'studentValidate'));
 const {getStudentDataByName}   = require(path.join(__dirname, 'studentSearchProcs'));
-const {formatCheckinDate}      = require(path.join(__dirname, '..', 'common', 'format_date'));
 
 // ----------------------------------------------------------------------------------------------
 function saveStudentData(studentData) {
@@ -23,13 +23,16 @@ function saveStudentData(studentData) {
         validStatus.saveMessage = 'Student record already exists.'
         return validStatus;
       }
+      studentData.badgeNumber = getNewBadgeNumber().nextBadgeNumber;
+      insertStudentData(studentData);
+      validStatus.saveMessage = 'Student record was created.'
+      return validStatus;
     } else {
       console.log(`saveStudentData:Updating Student -> ${JSON.stringify(validStatus)}`);
+      updateStudentData(studentData);
+      validStatus.saveMessage = 'Student record was updated.'
+      return validStatus;
     }
-    studentData.badgeNumber = getNewBadgeNumber().nextBadgeNumber;
-    insertStudentData(studentData);
-    validStatus.saveMessage = 'Student record was created.'
-    return validStatus;
 
   } catch(err) {
     console.log(`searchStudentData failed`);
@@ -176,8 +179,12 @@ const updateStudentStmt = `
          state       = :state,
          zip         = :zip,
          phoneHome   = :phoneHome,
-         email       = :email
-  where  badgeNumber = :badgeNumber;        
+         email       = :email,
+         studentImagePath   = :studentImagePath,
+         studentImageName   = :studentImageName,
+         studentImageType   = :studentImageType,
+         studentImageBase64 = :studentimageBase64
+    where  badgeNumber = :badgeNumber;        
 `
 function updateStudentData(studentData) {
   try {
@@ -200,7 +207,12 @@ function updateStudentData(studentData) {
         'phoneHome'   : studentData.phoneHome,
         'email'       : studentData.email,
         'badgeNumber' : studentData.badgeNumber,
-    });
+        'studentImagePath'  : studentData.studentImagePath,
+        'studentImageName'  : studentData.studentImageName,
+        'studentImageType'  : studentData.studentImageType,
+        'studentimageBase64': studentData.studentimageBase64
+
+      });
     db.close();
   } catch (err) {
     console.error('Error updating student data', err); throw err; 

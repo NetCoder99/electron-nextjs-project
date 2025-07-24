@@ -72,6 +72,10 @@ ipcMain.handle('handleDelRequirements', async (event, index) => {
 // --------------------------------------------------------------------------
 const {searchStudents}           = require(path.join(__dirname, 'students', 'studentSearchProcs'));
 const {saveStudentData}          = require(path.join(__dirname, 'students', 'studentSaveProcs'));
+const {selectStudentPicture}     = require(path.join(__dirname, 'students', 'studentPictures'));
+ipcMain.handle('handleSelectPicture', async (event, data) => {
+  return selectStudentPicture(data);
+})
 ipcMain.handle('handleStudentSearchClick', async (event, data) => {
   return searchStudents(data);
 })
