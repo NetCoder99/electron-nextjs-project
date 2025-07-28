@@ -89,11 +89,18 @@ input::placeholder {
   padding-bottom: 3rem;
 }
 
+.checkinResponse {
+  background-color: #fff9c4;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  font-size: 1.5rem;
+}
 
 .card_rank_common {
   margin-left: 5rem;
   margin-right: 5rem;
   margin-bottom: 1rem;
+  text-align: center;
 }
 
 .card-img-left {

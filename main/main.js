@@ -83,3 +83,9 @@ ipcMain.handle('handleSaveCreate', async (event, data) => {
   return saveStudentData(data);
 })
 
+// --------------------------------------------------------------------------
+const {insertCheckinRecord}           = require(path.join(__dirname, 'attendance', 'attendanceProcs'));
+ipcMain.handle('handleCheckin', async (event, data) => {
+  return insertCheckinRecord(data);
+})
+

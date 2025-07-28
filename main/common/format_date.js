@@ -45,9 +45,18 @@ function formatDisplayDate(date) {
   return [year, month, day, ].join('-');
 }
 
+function formatDateWithDay(inpDate) {
+  const date = inpDate.toLocaleDateString();
+  const time = inpDate.toLocaleTimeString();
+  const day  = inpDate.toLocaleDateString('en-us',{ weekday: 'long' });     
+  return `${day} ${date} ${time}`; 
+
+}
+
 module.exports = {
   formatCheckinDate,
   formatCheckinTime,
   formatCheckinDateTime,
-  formatDisplayDate
+  formatDisplayDate,
+  formatDateWithDay
 }

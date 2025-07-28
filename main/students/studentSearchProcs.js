@@ -28,18 +28,12 @@ const searchStudentStmt = `
        ,ifnull(currentRank, '') as currentRank
        ,ifnull(ethnicity,   '') as ethnicity
        ,ifnull(studentImagePath,   '') as studentImagePath
-       ,ifnull(studentimageBase64, 
+       ,ifnull(studentImageName, 
         (select imageName 
          from   assets a 
          where  imageName = 'RSM_Logo2.webp'
          )) as studentImageName       
-       ,ifnull(studentimageBase64, 
-        (select imageType 
-         from   assets a 
-         where  imageName = 'RSM_Logo2.webp'
-         )) as studentImageType       
-
-       ,ifnull(studentimageBase64, 
+       ,ifnull(studentImageType, 
         (select imageType 
          from   assets a 
          where  imageName = 'RSM_Logo2.webp'
@@ -140,9 +134,7 @@ function searchStudentDataByName(searchData) {
 function getStudentFieldsByBadge(searchData) {
   console.log(`getStudentDataByName : searchData -> ${JSON.stringify(searchData)}`);
   try {
-    const whereClause = `
-      where  badgeNumber    = :badgeNumber
-    `
+    const whereClause  = ` where badgeNumber = :badgeNumber `;
     const db_directory = getDatabaseLocation();
     const db           = new sqlite3(db_directory); 
     const searchStmt   = db.prepare(searchStudentStmt + whereClause);
@@ -188,5 +180,5 @@ module.exports = {
   searchStudents,
   getStudentDataByName,
   searchStudentDataByName, 
-  //getStudentFieldsByBadge
+  getStudentFieldsByBadge
 }
