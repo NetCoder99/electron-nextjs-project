@@ -49,10 +49,10 @@ function StudentListCard({studentData, handleEditClick}) {
               {studentData.firstName} {studentData.lastName}
             </Col>
             <Col sm={3} className="text-left fw-bold">
-              ?? Belt
+              {studentData.currentRankName}
             </Col>
             <Col sm={3} className="text-left fw-bold">
-              07/14/2025
+              01/01/1753
             </Col>
           </Row>
         </Col>

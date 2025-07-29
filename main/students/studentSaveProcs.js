@@ -4,6 +4,7 @@ const {getDatabaseLocation}    = require(path.join(__dirname, '..', 'data', 'com
 const {formatCheckinDate}      = require(path.join(__dirname, '..', 'common', 'format_date'));
 const {validateStudentFields}  = require(path.join(__dirname, 'studentValidate'));
 const {getStudentDataByName}   = require(path.join(__dirname, 'studentSearchProcs'));
+const {getBeltNames}           = require(path.join(__dirname, '..', 'ranks', 'rankProcs'));
 
 // ----------------------------------------------------------------------------------------------
 function saveStudentData(studentData) {
@@ -180,6 +181,8 @@ const updateStudentStmt = `
          zip         = :zip,
          phoneHome   = :phoneHome,
          email       = :email,
+         currentRank        = :currentRank,
+         currentRankName    = :currentRankName,
          studentImagePath   = :studentImagePath,
          studentImageName   = :studentImageName,
          studentImageType   = :studentImageType,
@@ -188,6 +191,9 @@ const updateStudentStmt = `
 `
 function updateStudentData(studentData) {
   try {
+    const beltNames = getBeltNames();
+    const beltEntry  = beltNames.find(belt => belt.beltId === parseInt(studentData.currentRank));
+
     day     = studentData.birthDate.slice(8, 10);
     month   = studentData.birthDate.slice(5, 7);
     year    = studentData.birthDate.slice(0, 4);
@@ -207,6 +213,8 @@ function updateStudentData(studentData) {
         'phoneHome'   : studentData.phoneHome,
         'email'       : studentData.email,
         'badgeNumber' : studentData.badgeNumber,
+        'currentRank'       : studentData.currentRank,
+        'currentRankName'   : beltEntry.beltTitle,
         'studentImagePath'  : studentData.studentImagePath,
         'studentImageName'  : studentData.studentImageName,
         'studentImageType'  : studentData.studentImageType,

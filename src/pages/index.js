@@ -49,7 +49,7 @@ export default function manageCheckins() {
       processCheckinResponse(searchResponse);
       setTimeout(() => {
         resetCheckinDisplay();
-      }, 3000);
+      }, 5000);
     }    
   };
 

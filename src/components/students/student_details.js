@@ -3,15 +3,27 @@ import { useState, useEffect, useRef } from "react";
 import Form    from "react-bootstrap/Form";
 import Button  from "react-bootstrap/Button";
 import Image   from "react-bootstrap/Image";
+import Select  from "react-select";
 
 export default function ManageStudent({ editMode, handleReturnClick, searchData }) {
   console.log(`ManageStudent editMode:   ${JSON.stringify(editMode)}`);
   console.log(`ManageStudent searchData: ${JSON.stringify(searchData)}`);
 
+  const rankOptions = [
+    { value: '1', label: 'White Belt'  },
+    { value: '2', label: 'Orange Belt' },
+    { value: '3', label: 'Yellow Belt' },
+    { value: '4', label: 'Blue Belt'   },
+    { value: '5', label: 'Green Belt'  },
+    { value: '6', label: 'Purple Belt' },
+    { value: '7', label: 'Brown Belt'  },
+    { value: '8', label: 'Black Belt'  }
+  ]  
   // -------------------------------------------------------------------------------
   const inputRefs = useRef({});
 
   // -------------------------------------------------------------------------------
+  const [beltFields,     setBeltFields ]     = useState({ value: '4', label: 'Blue Belt'   });
   const [studentFields,  setStudentFields ]  = useState({});
   const [displayOptions, setDisplayOptions]  = useState({headerMessage: "Student details"});
   const [imageResponse,  setImageResponse ]  = useState({
@@ -78,6 +90,12 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
     tmpStudentFields[fieldName] = value;
     setStudentFields(tmpStudentFields);
   };
+  const handleRankChange = (selectedOption) => {
+    console.log(`handleRankChange: ${selectedOption.value}`);
+    const tmpStudentFields = { ...studentFields };
+    tmpStudentFields["currentRank"] = selectedOption.value;
+    setStudentFields(tmpStudentFields);
+  };  
   const handleSaveClick = async () => {
     console.log(`handleSaveClick: ${JSON.stringify(studentFields)}`);
     const saveResponse = await window.electronAPI.invokeMain(
@@ -133,25 +151,23 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
             />
           </div>
           <div className="text-center d-inline-block ">
+          <div
+              className="mt-2 p-1 fw-bold border rounded"
+              style={{ backgroundColor: "#D3D3D3", width: "14rem" }}>
+              <label>Student:</label>
+              <label id="badgeNumberLbl">{studentFields.badgeNumber}</label>
+            </div>
             <div
               className="mt-2 p-1 fw-bold border rounded"
-              style={{ backgroundColor: "#D3D3D3", width: "14rem" }}
-            >
-              <label>Status:</label>
+              style={{ backgroundColor: "#D3D3D3", width: "14rem" }}>
+              <label>Status:&nbsp; </label>
               <label>Active</label>
             </div>
             <div
               className="mt-2 p-1 fw-bold border rounded"
               style={{ backgroundColor: "#D3D3D3", width: "14rem" }}
             >
-              <label>Student #</label>
-              <label id="badgeNumberLbl">{studentFields.badgeNumber}</label>
-            </div>
-            <div
-              className="mt-2 p-1 fw-bold border rounded"
-              style={{ backgroundColor: "#D3D3D3", width: "14rem" }}
-            >
-              <label>Since: </label>
+              <label>Member Since:</label><br></br>
               <label id="memberSinceLbl">01/01/1753</label>
             </div>
           </div>
@@ -329,6 +345,21 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
             </div>
           </div>
 
+          <div className=" text-start">
+            <div className="mb-3 w-25 d-inline-block">
+              <label htmlFor="currentRank">
+                Belt Rank {studentFields.currentRank}<span className="text-muted">(Optional)</span>
+              </label>
+              <Select 
+                menuPlacement = "top"
+                className     = "" 
+                onChange      = {handleRankChange}
+                options       = {rankOptions}
+                value  = {rankOptions[studentFields.currentRank-1]}
+              />
+            </div>
+          </div>
+
           <Button
             variant="success"
             className="smaller-input"
@@ -351,8 +382,7 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
         <Form.Label
             // {`d-inline-block float-left ${studentFields.middleNameClass}`}
           className={`fw-bold h6 ${studentFields.saveResult}`}
-          style={{ marginLeft: "6rem", marginTop: "2rem" }}
-        >
+          style={{ marginLeft: "6rem", marginTop: "2rem" }}>
           {studentFields.saveMessage}
         </Form.Label>
       </div>

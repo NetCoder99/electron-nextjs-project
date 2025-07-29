@@ -25,7 +25,8 @@ const searchStudentStmt = `
        ,ifnull(status,      '') as status
        ,ifnull(memberSince, '') as memberSince
        ,ifnull(gender,      '') as gender
-       ,ifnull(currentRank, '') as currentRank
+       ,ifnull(currentRank,     '') as currentRank
+       ,ifnull(currentRankName, '***') as currentRankName
        ,ifnull(ethnicity,   '') as ethnicity
        ,ifnull(studentImagePath,   '') as studentImagePath
        ,ifnull(studentImageName, 

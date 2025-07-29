@@ -8,6 +8,26 @@ const {getDatabaseLocation} = require(getDatabaseLocationPath);
 const rankPrefix = ['1st','2nd','3rd','4th','5th','6th']
 
 //---------------------------------------------------------------
+function getBeltNames() {
+  const beltsSelectStmt = `
+    SELECT beltId, beltTitle, stripeTitle, classCount, imageSource
+    FROM belts
+    order by beltId;
+  `;
+  try {
+    const db_directory = getDatabaseLocation();
+    const db           = new sqlite3(db_directory); 
+    const srchBelts    = db.prepare(beltsSelectStmt);
+    const beltRows     = srchBelts.all();
+    db.close();
+    return beltRows;
+  } catch (err) {
+    console.error('Error in getBeltNames:', err); 
+    throw err; 
+  } 
+}
+
+//---------------------------------------------------------------
 function getRankRequirements() {
   //console.log(`getRankRequirements invoked`);
   const beltsSelectStmt = `
@@ -117,6 +137,7 @@ function delRankRequirements(requirementId) {
 }
 
 module.exports = {
+  getBeltNames,
   getRankRequirements, 
   addRankRequirement, 
   saveRankRequirement,
