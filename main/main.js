@@ -73,6 +73,7 @@ ipcMain.handle('handleDelRequirements', async (event, index) => {
 const {searchStudents}           = require(path.join(__dirname, 'students', 'studentSearchProcs'));
 const {saveStudentData}          = require(path.join(__dirname, 'students', 'studentSaveProcs'));
 const {selectStudentPicture}     = require(path.join(__dirname, 'students', 'studentPictures'));
+const {createStudentBadge}       = require(path.join(__dirname, 'badge',    'badge_procs'));
 ipcMain.handle('handleSelectPicture', async (event, data) => {
   return selectStudentPicture(data);
 })
@@ -82,6 +83,11 @@ ipcMain.handle('handleStudentSearchClick', async (event, data) => {
 ipcMain.handle('handleSaveCreate', async (event, data) => {
   return saveStudentData(data);
 })
+ipcMain.handle('handleCreateBadge', async (event, data) => {
+  return createStudentBadge(data);
+})
+
+
 
 // --------------------------------------------------------------------------
 const {insertCheckinRecord}           = require(path.join(__dirname, 'attendance', 'attendanceProcs'));

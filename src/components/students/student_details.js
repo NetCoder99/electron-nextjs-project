@@ -97,7 +97,7 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
     setStudentFields(tmpStudentFields);
   };  
   const handleSaveClick = async () => {
-    console.log(`handleSaveClick: ${JSON.stringify(studentFields)}`);
+    //console.log(`handleSaveClick: ${JSON.stringify(studentFields)}`);
     const saveResponse = await window.electronAPI.invokeMain(
       "handleSaveCreate",
       studentFields
@@ -107,6 +107,13 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
     if (saveResponse.focusField) {
       inputRefs.current[saveResponse.focusField].focus();
     }
+  };
+  const handleBadgeClick = async () => {
+    console.log(`handleBadgeClick: ${JSON.stringify(studentFields.badgeNumber)}`);
+    const createResponse = await window.electronAPI.invokeMain(
+      "handleCreateBadge",
+      studentFields
+    );
   };
 
   // -------------------------------------------------------------------------------
@@ -375,6 +382,7 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
             style={{ width: "9rem" }}
             size="sm"
             disabled={studentFields.badgeNumber == -1}
+            onClick={(e) => handleBadgeClick()}
           >
             Create Badge
           </Button>

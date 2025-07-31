@@ -36,10 +36,10 @@ function saveStudentData(studentData) {
     }
 
   } catch(err) {
-    console.log(`searchStudentData failed`);
-    validStatus.validity    = 'err';
-    validStatus.saveMessage = err.toString();
-    return validStatus;
+    console.log(`saveStudentData failed`);
+    studentData.validity    = 'err';
+    studentData.saveMessage = err.toString();
+    return studentData;
   }
 }
 
@@ -84,6 +84,7 @@ const insertStudentStmt = `
     memberSince, 
     gender, 
     currentRank, 
+    currentRankName,
     ethnicity, 
     studentImageBytes, 
     studentImagePath, 
@@ -111,6 +112,7 @@ const insertStudentStmt = `
     :memberSince, 
     :gender, 
     :currentRank, 
+    :currentRankName,
     :ethnicity, 
     :studentImageBytes, 
     :studentImagePath, 
@@ -122,6 +124,9 @@ const insertStudentStmt = `
 `
 function insertStudentData(studentData) {
   try {
+    const beltNames = getBeltNames();
+    const beltEntry  = beltNames.find(belt => belt.beltId === parseInt(studentData.currentRank));
+
     console.log(`insertStudentData: ${JSON.stringify(studentData)}`);
     const day     = studentData.birthDate.slice(8, 10);
     const month   = studentData.birthDate.slice(5, 7);
@@ -152,8 +157,9 @@ function insertStudentData(studentData) {
         ,'status'        : 'Active'
         ,'memberSince'   : sinceDateFmt
         ,'gender'        : null
-        ,'currentRank'   : null
-        ,'ethnicity'     : null
+        ,'currentRank'       : studentData.currentRank
+        ,'currentRankName'   : beltEntry.beltTitle
+        ,'ethnicity'         : null
         ,'studentImagePath'    : studentData.studentImagePath
         ,'studentImageName'    : studentData.studentImageName
         ,'studentImageType'    : studentData.studentImageType
