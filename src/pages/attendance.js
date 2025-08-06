@@ -1,7 +1,24 @@
 import React from 'react'
+import { useEffect, useState } from 'react';
 
 export default function manageAttenance() {
-    return (
+  
+  const [weekEndDates, setWeekEndDates]     = useState([]);
+
+  // -------------------------------------------------------------------------------
+  useEffect(() => {
+    console.log(`manageAttenance useEffect invoked`);
+    const fetchData = async () => {
+      const response = await window.electronAPI.invokeMain('handleAttendanceSearch');
+      console.log(`manageAttenance fetching response: ${response}`);
+      setWeekEndDates(response);
+    };
+    fetchData();
+    return () => {};
+  }, []);
+
+  // -------------------------------------------------------------------------------
+  return (
       <div className="container">
       <div id="first_spacer" style={{ height: "5rem" }}></div>
 
@@ -20,7 +37,12 @@ export default function manageAttenance() {
         />
       </div>
 
-
+      <ul>
+        {weekEndDates.map((item, index) => (
+          <li key={index}>{item.endSundayDate} Thru {item.startSundayDate}</li>  
+        ))}
+      </ul>
+         
       <div className="row mt-5">
         <div className="col-md-1"></div>
         <div className="col-md-10  mx-auto border rounded-5 ps-5 pt-4 pb-3 checkinResponse">

@@ -27,6 +27,9 @@ function RankCard(props) {
     console.log(`newData : ${JSON.stringify(newData)}`);
     setData(newData);
   };
+  const handleCountBlur = (index, newValue) => {
+    console.log(`handleCountBlur invoked : ${index} :: ${newValue}`);
+  };
 
   // -------------------------------------------------------------------------------
   const handleAddClick = async () => {
@@ -61,13 +64,26 @@ function RankCard(props) {
       <Card.Body>
         <Card.Img variant="left" src={props.imageSource} style={{ height: '75px', objectFit: 'cover' }} />
         <Card.Title className='fw-bold'>{data.beltTitle}</Card.Title>
-        <Card.Text>
-          Requirements to advance to a White belt rank.
+        <Card.Text className='fw-bold text-start'>
+          <div>Requirements to advance to a White belt rank.</div>
+          <div>Minimum class count
+          <Form.Control
+              type="number"
+              className='d-inline float-left ms-4'
+              style={{width: "4rem", textAlign: 'right'}}
+              size="sm"
+              placeholder="Enter quantity"
+              defaultValue='-1'
+              min={0}    
+              max={2000} 
+              onBlur={(e) => handleCountBlur(index, e.target.value)}
+              disabled='true'
+            />
+            </div>
         </Card.Text>
-        <br></br>
-        <ListGroup variant="flush">
+        <ListGroup variant="left">
         {data.stripe_names.map((item, index) => (
-          <ListGroup.Item key={item.requirementId}>
+          <ListGroup.Item className='text-start' key={item.requirementId}>
 
             <Form.Control
               placeholder="Stripe Title"
@@ -105,7 +121,7 @@ function RankCard(props) {
         ))}
         </ListGroup>
       </Card.Body>
-      <div className='m-0 p-0'>
+      <div className='m-0 p-0 text-start'>
         <Button 
           className='d-inline-block btn btn-sm mt-0 mb-2 ms-3' 
           style={{width: "5rem"}}

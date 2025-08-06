@@ -23,7 +23,7 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
   const inputRefs = useRef({});
 
   // -------------------------------------------------------------------------------
-  const [beltFields,     setBeltFields ]     = useState({ value: '4', label: 'Blue Belt'   });
+  //const [beltFields,     setBeltFields ]     = useState({ value: '4', label: 'Blue Belt'   });
   const [studentFields,  setStudentFields ]  = useState({});
   const [displayOptions, setDisplayOptions]  = useState({headerMessage: "Student details"});
   const [imageResponse,  setImageResponse ]  = useState({
@@ -61,7 +61,7 @@ export default function ManageStudent({ editMode, handleReturnClick, searchData 
     const studentFields = await window.electronAPI.invokeMain(
       "handleStudentSearchClick", passData
     );
-    console.log(`studentFieldsDef: ${JSON.stringify(studentFields)}`);
+    //console.log(`studentFieldsDef: ${JSON.stringify(studentFields)}`);
     if (Array.isArray(studentFields)) {
       setStudentFields(studentFields[0]);  
     }

@@ -1,5 +1,5 @@
-appId: "com.github.netcoder99.electron-next-sample"
-productName: "Electron Next.JS"
+appId: "com.github.netcoder99.attendance_tracker"
+productName: "Atendance Tracker"
 copyright: "Copyright (c) 2025 JDugger"
 win:
   target: ["dir", "portable", "zip"]

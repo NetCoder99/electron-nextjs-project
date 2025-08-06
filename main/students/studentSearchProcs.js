@@ -175,7 +175,6 @@ function getStudentDataByName(searchData) {
   } 
 }
 
-
 module.exports = {
   //countStudentsByName,
   searchStudents,

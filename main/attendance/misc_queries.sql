@@ -1,0 +1,33 @@
+-- // const dateOffsets = `
+-- //   WITH RECURSIVE cte_numbers (n) AS (
+-- //     SELECT 1
+-- //     UNION ALL
+-- //     SELECT n + 1 FROM cte_numbers WHERE n < 7
+-- //   ),
+-- //   cte_dateOffsets as (
+-- //     SELECT nmbrs.n, '''' || cast(nmbrs.n*-1 as varchar) || ' day''' as dateOffset
+-- //     FROM   cte_numbers nmbrs
+-- //   )  
+-- //   select *
+-- //   from   cte_dateOffsets
+-- // `
+
+-- // WITH RECURSIVE cte_numbers (n, w) AS (
+-- //   SELECT 1, 1
+-- //   UNION ALL
+-- //   SELECT n + 1, 
+-- //          case when n+1 < 8 then 1
+-- //               when n+1 < 15 then 2
+-- //               else 3 
+-- //          end as w     
+-- //   FROM   cte_numbers 
+-- //   WHERE  n < 100
+-- // )
+-- // select *
+-- // from   cte_numbers
+
+-- // SELECT date('now', 'weekday 0', '+7 days') 
+-- // union all 
+-- // SELECT date('now', 'weekday 0', '-0 days')
+-- // union all 
+-- // SELECT date('now', 'weekday 0', '-7 days')

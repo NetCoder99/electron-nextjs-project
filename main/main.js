@@ -88,10 +88,22 @@ ipcMain.handle('handleCreateBadge', async (event, data) => {
 })
 
 
-
 // --------------------------------------------------------------------------
 const {insertCheckinRecord}           = require(path.join(__dirname, 'attendance', 'attendanceProcs'));
 ipcMain.handle('handleCheckin', async (event, data) => {
   return insertCheckinRecord(data);
 })
 
+const {GetWeekEndDates}           = require(path.join(__dirname, 'attendance', 'attendanceSearch'));
+ipcMain.handle('handleAttendanceSearch', async (event, data) => {
+  return GetWeekEndDates(data);
+})
+
+// --------------------------------------------------------------------------
+const {GetStudentPromotions}      = require(path.join(__dirname, 'promotions', 'promotionsInit'));
+ipcMain.handle('handleGetPromotions', async (event, badgeData) => {
+  console.log(`handleGetPromotions: ${badgeData}`);
+  return GetStudentPromotions(badgeData);
+})
+
+//handleGetPromotions

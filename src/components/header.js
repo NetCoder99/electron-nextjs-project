@@ -8,8 +8,9 @@ import { usePathname } from 'next/navigation'
 const menuLinks = [
   { title: "Home",       path: "/" },
   { title: "Students",   path: "/students" },
+  { title: "Promotions",   path: "/promotions" },
   { title: "Attendance", path: "/attendance" },
-  { title: "Ranks",      path: "/ranks/ranks" },
+  { title: "Ranks",      path: "/ranks" },
   { title: "Classes",    path: "/classes" },
   { title: "About",      path: "/about" },
 ];

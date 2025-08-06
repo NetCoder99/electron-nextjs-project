@@ -1,11 +1,11 @@
 const path     = require("path");
-const appRoot  = require('app-root-path');
+//const appRoot  = require('app-root-path');
 const sqlite3  = require('better-sqlite3');
 const getDatabaseLocationPath = path.join(__dirname, '..', 'data', 'common');
 const {getDatabaseLocation} = require(getDatabaseLocationPath);
 
 //---------------------------------------------------------------
-const rankPrefix = ['1st','2nd','3rd','4th','5th','6th']
+const rankPrefix = ['1st','2nd','3rd','4th','5th','6th','7th','8th','9th']
 
 //---------------------------------------------------------------
 function getBeltNames() {

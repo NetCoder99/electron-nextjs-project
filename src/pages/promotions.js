@@ -2,10 +2,10 @@ import React from "react";
 import { useEffect, useState } from 'react';
 
 import SearchForStudents from "../components/students/student_search";
-import StudentListCard   from "../components/students/student_card";
+import PromotionsCard    from "../components/promotions/promotions_card";
 import ManageStudent     from "../components/students/student_details";
 
-export default function manageStudents() {
+export default function managePromotions() {
   // ----------------------------------------------------------------------
   const [searchData, setSearchData] = useState({
     firstName: '',
@@ -73,7 +73,7 @@ export default function manageStudents() {
           <ul style={{padding: '0px', margin: "0px"}}>
             {studentList.map((item, index) => (
               <li key={index}>
-                <StudentListCard studentData={item} handleEditClick={handleEditClick}></StudentListCard>
+                <PromotionsCard studentData={item} itemIndex={index} handleEditClick={handleEditClick}></PromotionsCard>
               </li>  
             ))}
           </ul>
