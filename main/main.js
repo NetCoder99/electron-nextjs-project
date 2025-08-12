@@ -100,10 +100,10 @@ ipcMain.handle('handleAttendanceSearch', async (event, data) => {
 })
 
 // --------------------------------------------------------------------------
-const {GetStudentPromotions}      = require(path.join(__dirname, 'promotions', 'promotionsInit'));
+const {GetStudentPromotionsV2}      = require(path.join(__dirname, 'promotions', 'promotionsInit'));
 ipcMain.handle('handleGetPromotions', async (event, badgeData) => {
   console.log(`handleGetPromotions: ${badgeData}`);
-  return GetStudentPromotions(badgeData);
+  return GetStudentPromotionsV2(badgeData);
 })
 
 //handleGetPromotions

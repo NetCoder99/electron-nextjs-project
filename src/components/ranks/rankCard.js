@@ -16,7 +16,6 @@ function RankCard(props) {
     console.log(`data : ${JSON.stringify(data.stripe_names[index])}`);
     const newData = data;
     newData.stripe_names[index].stripeTitle = newValue;
-    console.log(`newData : ${JSON.stringify(newData)}`);
     setData(newData);
   };
   const handleClassesBlur = (index, newValue) => {
@@ -24,11 +23,13 @@ function RankCard(props) {
     console.log(`data : ${JSON.stringify(data.stripe_names[index])}`);
     const newData = data;
     newData.stripe_names[index].requiredClasses = newValue;
-    console.log(`newData : ${JSON.stringify(newData)}`);
     setData(newData);
   };
-  const handleCountBlur = (index, newValue) => {
-    console.log(`handleCountBlur invoked : ${index} :: ${newValue}`);
+  const handleCountBlur = (newValue) => {
+    console.log(`handleCountBlur invoked : ${newValue}`);
+    const newData = {...data};
+    newData["newClassCount"] = parseInt(newValue);
+    setData(newData);
   };
 
   // -------------------------------------------------------------------------------
@@ -65,7 +66,7 @@ function RankCard(props) {
         <Card.Img variant="left" src={props.imageSource} style={{ height: '75px', objectFit: 'cover' }} />
         <Card.Title className='fw-bold'>{data.beltTitle}</Card.Title>
         <Card.Text className='fw-bold text-start'>
-          <div>Requirements to advance to a White belt rank.</div>
+          <div>Requirements to advance to a {data.beltTitle} rank.</div>
           <div>Minimum class count
           <Form.Control
               type="number"
@@ -76,8 +77,7 @@ function RankCard(props) {
               defaultValue='-1'
               min={0}    
               max={2000} 
-              onBlur={(e) => handleCountBlur(index, e.target.value)}
-              disabled='true'
+              onBlur={(e) => handleCountBlur(e.target.value)}
             />
             </div>
         </Card.Text>

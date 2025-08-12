@@ -10,7 +10,11 @@ const rankPrefix = ['1st','2nd','3rd','4th','5th','6th','7th','8th','9th']
 //---------------------------------------------------------------
 function getBeltNames() {
   const beltsSelectStmt = `
-    SELECT beltId, beltTitle, stripeTitle, classCount, imageSource
+    SELECT beltId, 
+           beltTitle, 
+           stripeTitle, 
+           classCount, 
+           imageSource 
     FROM belts
     order by beltId;
   `;
@@ -31,7 +35,7 @@ function getBeltNames() {
 function getRankRequirements() {
   //console.log(`getRankRequirements invoked`);
   const beltsSelectStmt = `
-    SELECT beltId, beltTitle, stripeTitle, classCount, imageSource
+    SELECT beltId, beltTitle, stripeTitle, classCount, imageSource, classCount as newClassCount
     FROM belts
     order by beltId;
   `;
@@ -48,7 +52,6 @@ function getRankRequirements() {
     const srchRqmts    = db.prepare(rqmtsSelectStmt);
     const beltRows     = srchBelts.all();
     beltRows.forEach((beltRow)  => {
-      //console.log(beltRow);
       const rqmtRows   = srchRqmts.all({'beltId': beltRow.beltId});
       beltRow.stripe_names = rqmtRows;
     });

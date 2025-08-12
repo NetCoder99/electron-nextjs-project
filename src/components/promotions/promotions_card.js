@@ -1,5 +1,6 @@
 import Container from 'react-bootstrap/Container';
 import { useEffect, useState } from 'react';
+import ListGroup  from 'react-bootstrap/ListGroup';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
@@ -20,7 +21,7 @@ function PromotionsCard({studentData, itemIndex, handleEditClick}) {
       console.log(`PromotionsCard:setInitialFieldDefs:${studentData.badgeNumber}`);
       const badgeData = {'badgeNumber' : studentData.badgeNumber};
       const searchResponse = await window.electronAPI.invokeMain('handleGetPromotions', badgeData);
-      console.log(`PromotionsCard:setInitialFieldDefs:searchResponse${JSON.stringify(searchResponse)}`);
+      //console.log(`PromotionsCard:setInitialFieldDefs:searchResponse${JSON.stringify(searchResponse)}`);
       setPromotions(searchResponse);
     };
     setInitialFieldDefs();
@@ -35,8 +36,7 @@ function PromotionsCard({studentData, itemIndex, handleEditClick}) {
         borderRadius: "10px",
         marginBottom: "5px",
         padding: "10px",
-      }}
-    >
+      }}>
       <Row style={buttonStyle}>
         <Col sm={2}><img src={`data:image/${studentData.studentImageType};base64,${studentData.studentimageBase64}`} alt="No image found" height={75} /></Col>
         <Col className="pt-3">
@@ -55,7 +55,10 @@ function PromotionsCard({studentData, itemIndex, handleEditClick}) {
             </Col>
           </Row>
           <Row>
-            <Col sm={6} className="text-left fw-bold">
+            <Col sm={2} className="text-left fw-bold">
+              {studentData.badgeNumber}
+            </Col>
+            <Col sm={4} className="text-left fw-bold">
               {studentData.firstName} {studentData.lastName}
             </Col>
             <Col sm={3} className="text-left fw-bold">
@@ -73,24 +76,26 @@ function PromotionsCard({studentData, itemIndex, handleEditClick}) {
               <h5>Promotion History</h5>
             </Col>
           </Row>
-
-          {promotions.map((item, index) => (
-              <li key={index}>{JSON.stringify(item)}</li>  
-            ))}
-
-          <Row>
-            <Col sm={6} className="text-left fw-bold">
-              Rank Name
-            </Col>
-            <Col sm={3} className="text-left fw-bold">
-              Last Attendance Date
-            </Col>
-            <Col sm={3} className="text-left fw-bold">
-              Belt Id 
-            </Col>
-          </Row>
         </Col>
       </Row>
+
+      <ListGroup variant="left">
+        {promotions.map((item, index) => (
+          <ListGroup.Item className='text-start' key={item.requirementId}>
+          <Row>
+            <Col sm={6} className="text-left fw-bold">
+              {item.rankName}
+            </Col>
+            <Col sm={3} className="text-left fw-bold">
+              {item.checkinDateTime}
+            </Col>
+            <Col sm={3} className="text-left fw-bold">
+              {item.classCount}
+            </Col>
+          </Row>            
+          </ListGroup.Item>
+        ))}  
+      </ListGroup>      
     </Container>
   );
 }
