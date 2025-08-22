@@ -31,3 +31,32 @@
 -- // SELECT date('now', 'weekday 0', '-0 days')
 -- // union all 
 -- // SELECT date('now', 'weekday 0', '-7 days')
+
+  --  ----------------------------------------------------------------------
+  --  Generate all minutes:seconds in a day for testing formatting 
+  --  ----------------------------------------------------------------------
+  --  WITH RECURSIVE 
+  --    cte_minutes (n) AS (
+  --        SELECT 0
+  --        UNION ALL
+  --        SELECT n + 1 FROM cte_minutes WHERE n < 23
+  --    ),
+  --    cte_seconds (n, s) as (
+  --        SELECT n, 0
+  --        from   cte_minutes
+  --        UNION ALL
+  --        SELECT n, s + 1 
+  --        FROM   cte_seconds WHERE s < 59
+  --    ),
+  --  cte_timestamps as (
+  --      select PRINTF('%02d',cte2.n) || ':' || PRINTF('%02d',cte2.s) as timeStamp,
+  --             cte2.n, 
+  --             cte2.s
+  --      from   cte_seconds  cte2
+  --      order  by n
+  --  )  
+  --  select cte3.timeStamp
+  --        ,case when substr(cte3.timeStamp, 1, 2) > '11' 
+  --              then 'PM' else 'AM'
+  --         end as timeStamp    
+  --  from   cte_timestamps cte3

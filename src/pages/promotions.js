@@ -65,6 +65,7 @@ export default function managePromotions() {
       <>
         <SearchForStudents 
           searchData={searchData}
+          pageTitle="Promotions Search"
           handleFieldBlur={handleFieldBlur}
           handleSearchClick={handleSearchClick}
           handleCreateClick={handleCreateClick}

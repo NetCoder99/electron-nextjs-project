@@ -3,12 +3,12 @@ import React from "react";
 import Form       from 'react-bootstrap/Form';
 import Button     from 'react-bootstrap/Button';
 
-export default function SearchForStudents({searchData, handleSearchClick, handleFieldBlur, handleCreateClick}) {
+export default function SearchForStudents({searchData, pageTitle, handleSearchClick, handleFieldBlur, handleCreateClick}) {
 
   return (
     <form className="mainForm">
     <div className="row d-flex justify-content-center small form">
-      <h3 className="text-center">Search for students</h3>
+      <h3 className="text-center">{pageTitle}</h3>
       <div className="col-sm-1"></div>
       <div className="col-sm-10 m-auto">
         <div className="row ">

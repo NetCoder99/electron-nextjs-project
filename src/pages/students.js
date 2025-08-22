@@ -65,6 +65,7 @@ export default function manageStudents() {
       <>
         <SearchForStudents 
           searchData={searchData}
+          pageTitle="Student Update Search"
           handleFieldBlur={handleFieldBlur}
           handleSearchClick={handleSearchClick}
           handleCreateClick={handleCreateClick}
