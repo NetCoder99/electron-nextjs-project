@@ -10,8 +10,8 @@ const appServe = app.isPackaged ? serve({
   directory: path.join(__dirname, "../out")
 }) : null;
 
-// --------------------------------------------------------------------------
-const createWindow = () => {
+  // --------------------------------------------------------------------------
+  const createWindow = () => {
   log.info("Creating main window");
   const win = new BrowserWindow({
     width: 1200,
@@ -21,7 +21,7 @@ const createWindow = () => {
       preload: path.join(__dirname, "preload.js")
     }
   });
-
+  
   if (app.isPackaged) {
     log.info("Running packaged app.");
     appServe(win)
@@ -106,4 +106,11 @@ ipcMain.handle('handleGetPromotions', async (event, badgeData) => {
   return GetStudentPromotionsV2(badgeData);
 })
 
-//handleGetPromotions
+// --------------------------------------------------------------------------
+ipcMain.handle('handleSaveClassSchedule', async (event, classData) => {
+  console.log(`handleSaveClassSchedule: ${classData}`);
+})
+ipcMain.handle('handleDisplayClassDetails', async (event, classData) => {
+  console.log(`handleDisplayClassDetails: ${classData}`);
+})
+

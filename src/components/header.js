@@ -11,7 +11,7 @@ const menuLinks = [
   { title: "Promotions",   path: "/promotions" },
   { title: "Attendance", path: "/attendance" },
   { title: "Ranks",      path: "/ranks" },
-  { title: "Classes",    path: "/classes" },
+  { title: "Classes",    path: "/schedule" },
   { title: "About",      path: "/about" },
 ];
 

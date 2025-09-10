@@ -33,30 +33,90 @@
 -- // SELECT date('now', 'weekday 0', '-7 days')
 
   --  ----------------------------------------------------------------------
-  --  Generate all minutes:seconds in a day for testing formatting 
+  --  First pass at importing extended attendance data into attendance table
   --  ----------------------------------------------------------------------
-  --  WITH RECURSIVE 
-  --    cte_minutes (n) AS (
-  --        SELECT 0
-  --        UNION ALL
-  --        SELECT n + 1 FROM cte_minutes WHERE n < 23
-  --    ),
-  --    cte_seconds (n, s) as (
-  --        SELECT n, 0
-  --        from   cte_minutes
-  --        UNION ALL
-  --        SELECT n, s + 1 
-  --        FROM   cte_seconds WHERE s < 59
-  --    ),
-  --  cte_timestamps as (
-  --      select PRINTF('%02d',cte2.n) || ':' || PRINTF('%02d',cte2.s) as timeStamp,
-  --             cte2.n, 
-  --             cte2.s
-  --      from   cte_seconds  cte2
-  --      order  by n
-  --  )  
-  --  select cte3.timeStamp
-  --        ,case when substr(cte3.timeStamp, 1, 2) > '11' 
-  --              then 'PM' else 'AM'
-  --         end as timeStamp    
-  --  from   cte_timestamps cte3
+--  SELECT  null as attendance_id 
+--         ,CAST(attd.attendanceScannedNum as integer)   as badgeNumber 
+--        ,attd.attendanceCheckinDateTime               as checkinDateTime    -- 2019-06-15 08:53:00
+--        ,substr(attd.attendanceDate, 6, 2) || '/' || 
+--         substr(attd.attendanceDate, 9, 2) || '/' ||
+--         substr(attd.attendanceDate, 1, 4)            as checkinDate        -- 06/15/2019
+--        ,attd .attendanceCheckinTimeIn 
+--        ,case when substr(attd .attendanceCheckinTimeIn, 1, 2) > '11' 
+--              then cast(substr(attd .attendanceCheckinTimeIn, 1, 2) as integer) - 12
+--              else cast(substr(attd .attendanceCheckinTimeIn, 1, 2) as integer)
+--         end || ':' || 
+--         substr(attd .attendanceCheckinTimeIn, 4, 2) || ' ' ||
+--         case when substr(attd .attendanceCheckinTimeIn, 1, 2) > '11' then 'PM' 
+--             else 'AM'
+--         end as checkinTime     
+--        ,attendanceStudentName  as studentName
+--        ,'Active'               as studentStatus
+--        ,className 
+--        ,attendanceRankName     as rankName 
+--        ,attendanceRankNum      as rankNum
+--    FROM   attendance_import   attd
+--    where  attd.attendanceScannedNum = '1565'
+--    order  by attd.attendanceCheckinDateTime asc;
+
+--  ----------------------------------------------------------------------
+--  Generate all minutes:seconds in a day for testing formatting 
+--  ----------------------------------------------------------------------
+--  WITH RECURSIVE 
+--    cte_minutes (n) AS (
+--        SELECT 0
+--        UNION ALL
+--        SELECT n + 1 FROM cte_minutes WHERE n < 23
+--    ),
+--    cte_seconds (n, s) as (
+--        SELECT n, 0
+--        from   cte_minutes
+--        UNION ALL
+--        SELECT n, s + 1 
+--        FROM   cte_seconds WHERE s < 59
+--    ),
+--  cte_timestamps as (
+--      select PRINTF('%02d',cte2.n) || ':' || PRINTF('%02d',cte2.s) as timeStamp,
+--             cte2.n, 
+--             cte2.s
+--      from   cte_seconds  cte2
+--      order  by n
+--  )  
+--  select cte3.timeStamp
+--        ,case when substr(cte3.timeStamp, 1, 2) > '11' 
+--              then 'PM' else 'AM'
+--         end as timeStamp    
+--  from   cte_timestamps cte3
+
+--  ----------------------------------------------------------------------
+--  Select some class/schedule data 
+--  ----------------------------------------------------------------------
+--select   1                 as classNum,
+--         'Chanbara Youth'  as className,
+--         2                 as styleName,
+--         1                 as classDayOfWeek,
+--         '5:00 PM'         as classStartTime,
+--         50                as classDuration,
+--         null              as allowedRanks,
+--         'Chanbara Youth (4 to 10 years of age) ' as classDisplayTitle,
+--         '{[4, 10]}'           as allowedAges
+--union all 
+--select   2                 as classNum,
+--         'Chanbara Juniors to Adults'  as className,
+--         2                 as styleName,
+--         1                 as classDayOfWeek,
+--         '6:00 PM'         as classStartTime,
+--         50                as classDuration,
+--         null              as allowedRanks,
+--         'Chanbara Juniors to Adults' as classDisplayTitle,
+--         '{[11, 99]}'      as allowedAges
+--union all 
+--select   3                 as classNum,
+--         'All Rank Kata/Short Forms'  as className,
+--         1                 as styleName,
+--         2                 as classDayOfWeek,
+--         '4:00 PM'         as classStartTime,
+--         50                as classDuration,
+--         '{[]}'              as allowedRanks,
+--         'All Rank Kata/Short Forms' as classDisplayTitle,
+--         '{[]}'      as allowedAges

@@ -30,6 +30,7 @@
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.10",
     "react-datepicker": "^8.4.0",
+    "react-datetime": "^3.3.1",
     "react-dom": "^19.0.0",
     "react-number-format": "^5.4.4",
     "react-select": "^5.10.2",
