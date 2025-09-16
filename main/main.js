@@ -114,3 +114,10 @@ ipcMain.handle('handleDisplayClassDetails', async (event, classData) => {
   console.log(`handleDisplayClassDetails: ${classData}`);
 })
 
+// --------------------------------------------------------------------------
+const {validateClassFields}      = require(path.join(__dirname, 'schedule', 'classValidate'));
+ipcMain.handle('handleSaveClassDetails', async (event, classData) => {
+  console.log(`handleSaveClassSchedule: ${classData}`);
+  const classValidateResults = validateClassFields(classData);
+  return classValidateResults;
+})
