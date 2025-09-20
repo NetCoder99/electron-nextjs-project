@@ -80,6 +80,7 @@ function classAlreadyExists(className) {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+const {checkForClassOverlap}      = require(path.join(__dirname, 'classQueries'));
 function validateStartTime(classData) {
   const pattern = /^[1]?[0-9]:[0-5][0-9] (AM|PM)/;
   if (isFieldNull(classData.startTime) ) {
@@ -98,11 +99,18 @@ function validateStartTime(classData) {
       classData.focusField  = 'className';
       classData.saveMessage = "Error: Start time format is not valid!";
     }
+  } else if (checkForClassOverlap(classData).isOverlapping === 'true') {
+    classData.validity       = 'err';
+    classData.startTimeClass = 'invalid';
+    classData.saveResult     = 'text-danger';
+    if (isFieldNull(classData.saveMessage)) {
+      classData.focusField  = 'className';
+      classData.saveMessage = "Error: Start time overlaps another class!";
+    }
   } else {
     classData.startTimeClass = 'valid';
   }
 }
-
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 function validateClassDuration(classData) {
@@ -150,32 +158,6 @@ function validateBeltsAllowed(classData) {
     classData.allowedRanksClass = 'valid';
   }
 }
-
-
-
-// const {saveStudentData}   = require(path.join(__dirname, 'classQueries'));
-// function classAlreadExists(className) {
-//   const classDetails = saveStudentData(className)
-// }
-
-
-
-// // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-// function validateStyleNumber(classData) {
-//   if (isFieldNull(classData.styleNum) ) {
-//     studentData.validity       = 'err';
-//     studentData.classStyleClass = 'invalid';
-//     studentData.saveResult     = 'text-danger';
-//     if (isFieldNull(studentData.saveMessage)) {
-//       studentData.focusField  = 'className';
-//       studentData.saveMessage = "Class name is required";
-//     }
-//   } else {
-//     studentData.firstNameClass = 'valid';
-//   }
-// }
-
-
 
 module.exports = {
   isFieldNull,

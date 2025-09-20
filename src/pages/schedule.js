@@ -52,6 +52,7 @@ export default function manageAttenance() {
             <div className="col-md-3">Sunday</div>
             <div className="col-md-3">
               <Button
+                variant="link" 
                 size="sm"
                 style={{ fontSize: "14px", padding: "1px" }}
                 onClick={(e) => handleAddClassClick(0)}
@@ -79,6 +80,7 @@ export default function manageAttenance() {
             <div className="col-md-3"></div>
             <div className="col-md-3">
               <Button
+                variant="link" 
                 size="sm"
                 style={{ fontSize: "14px", padding: "1px" }}
                 onClick={(e) => handleAddClassClick(1)}
@@ -116,6 +118,7 @@ export default function manageAttenance() {
             <div className="col-md-3"></div>
             <div className="col-md-3">
               <Button
+                variant="link" 
                 size="sm"
                 style={{ fontSize: "14px", padding: "1px" }}
                 onClick={(e) => handleAddClassClick(2)}

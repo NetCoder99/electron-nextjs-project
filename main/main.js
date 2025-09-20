@@ -116,8 +116,16 @@ ipcMain.handle('handleDisplayClassDetails', async (event, classData) => {
 
 // --------------------------------------------------------------------------
 const {validateClassFields}      = require(path.join(__dirname, 'schedule', 'classValidate'));
+const {saveClassDetails}         = require(path.join(__dirname, 'schedule', 'classQueries'));
 ipcMain.handle('handleSaveClassDetails', async (event, classData) => {
   console.log(`handleSaveClassSchedule: ${classData}`);
   const classValidateResults = validateClassFields(classData);
-  return classValidateResults;
+  if (classValidateResults.validity != 'ok') {
+    return classValidateResults;
+  }
+  else {
+    saveResults = saveClassDetails(classData);
+    console.log(`handleSaveClassSchedule: ${classData}`);
+    return saveResults;
+  }
 })

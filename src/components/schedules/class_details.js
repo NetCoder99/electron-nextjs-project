@@ -6,8 +6,15 @@ import { isStartTimeValid, calcClassEndTime } from "./class_validate";
 
 function ClassDetailsCard({editMode, handleReturnClick}) {
 
-  const frmClassNameRef   = useRef(null);  
-  const frmClassStartTimeRef = useRef(null);  
+  const saveButtonRef     = useRef(null);
+  const frmClassNameRef   = useRef(null);
+  const frmStyleNumRef    = useRef(null);
+  const frmDayOfWeekRef   = useRef(null);
+  const frmClassStartTimeRef = useRef(null);
+  const frmClassFinisTimeRef = useRef(null);
+  const frmClassDurationRef  = useRef(null);
+  const frmAllowedAgesRef    = useRef(null);
+
   const whiteCheckBoxRef  = useRef(null);
   const orangeCheckBoxRef = useRef(null);
   const yellowCheckBoxRef = useRef(null);
@@ -17,21 +24,19 @@ function ClassDetailsCard({editMode, handleReturnClick}) {
   const brownCheckBoxRef  = useRef(null);
   const blackCheckBoxRef  = useRef(null);
   
-  const allowedAgesRef  = useRef(null);
-  const allowedAgesLowerRef  = useRef(null);
-  const allowedAgesUpperRef  = useRef(null);
 
 
   const [classFields, setClassFields] = useState({
-    className: "",
-    styleNum: "",
+    className: "Chanbara",
+    styleNum: "1",
     styleName: "",
     dayOfWeekNum: "",
     dayOfWeekName: "",
-    startTime: "",
+    startTime: "5:00 PM",
+    finisTime: "5:50 PM",
     classDuration: "50",
     allowedRanks: [],
-    allowedAges: {},
+    allowedAges: "",
     saveMessage: "Awaiting Input"
   });
 
@@ -43,17 +48,35 @@ function ClassDetailsCard({editMode, handleReturnClick}) {
     setClassFields(tmpClassFields);
   }, []);  
 
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   const handleSaveClick = async () => {
     //console.log(`handleSaveClick: ${JSON.stringify(studentFields)}`);
+    saveButtonRef.current.disabled = true;
+    const fieldData = gatherFieldData();
     const saveResponse = await window.electronAPI.invokeMain(
       "handleSaveClassDetails",
       classFields
     );
     console.log(`handleSaveClick saveResponse: ${JSON.stringify(saveResponse)}`);
     setClassFields(saveResponse);
+    saveButtonRef.current.disabled = false;
     // if (saveResponse.focusField) {
     //   inputRefs.current[saveResponse.focusField].focus();
     // }
+  };
+  function gatherFieldData() {
+    console.log(`gatherFieldData`);
+    const fieldData = {
+      'className'     : frmClassNameRef.current.value,
+      'styleNum'      : frmStyleNumRef.current.value,
+      'dayOfWeekNum'  : frmDayOfWeekRef.current.value,
+      'startTime'     : frmClassStartTimeRef.current.value,
+      'finisTime'     : frmClassFinisTimeRef.current.value,
+      'classDuration' : frmClassDurationRef.current.value,
+      'allowedRanks'  : gatherBeltRanks(),
+      'allowedAges'   : frmAllowedAgesRef.current.value,
+    }
+    return fieldData;
   };
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -105,9 +128,13 @@ function ClassDetailsCard({editMode, handleReturnClick}) {
     console.log(`handleClassStartTimeBlur: ${event.target.id} : ${event.target.value}: ${frmClassStartTimeRef.current.isInvalid}`);
     const startTimeValid = isStartTimeValid(event.target.value);
     console.log(`handleClassStartTimeBlur:startTimeValid: ${JSON.stringify(startTimeValid)}`);
+    const classDuration  = frmClassDurationRef.current.value
+    const classEndtime   = calcClassEndTime(classFields.startTime, classDuration);
     const tmpClassFields = { ...classFields };
+    frmClassFinisTimeRef.current.value = classEndtime;
     tmpClassFields[event.target.id] = event.target.value;
-    setClassFields(tmpClassFields);    
+    tmpClassFields['finisTime'] = classEndtime;
+    setClassFields(tmpClassFields);     
     if (startTimeValid['status']) {
       frmClassStartTimeRef.current.className = frmClassStartTimeRef.current.className.replace(' invalid', '');
     }
@@ -118,32 +145,13 @@ function ClassDetailsCard({editMode, handleReturnClick}) {
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   const handleClassDurationBlur = (event) => {
     console.log(`handleClassDurationBlur: ${event.target.id} : ${event.target.value}: ${frmClassStartTimeRef.current.isInvalid}`);
+    const classEndtime = calcClassEndTime(classFields.startTime, event.target.value);
+    console.log(`handleClassDurationBlur:classEndtime: ${classEndtime}`);
     const tmpClassFields = { ...classFields };
-    tmpClassFields[event.target.id] = event.target.value;
+    tmpClassFields['finisTime'] = classEndtime;
     setClassFields(tmpClassFields);    
-    const classEndtime = calcClassEndTime(classFields.startTime, classFields.classDuration);
+    frmClassFinisTimeRef.current.value = classEndtime;
   };
-  // const handleClassDurationKeyDown = (event) => {
-  //   console.log(`handleClassDurationKeyDown: ${event.target.id} : ${event.target.value}: ${frmClassStartTimeRef.current.isInvalid}`);
-  //   //event
-  //   const tmpClassFields = { ...classFields };
-  //   tmpClassFields[event.target.id] = event.target.value;
-  //   setClassFields(tmpClassFields);    
-  // };
-
-  
-
-  const handleAllowedAgesAnyChange = (event) => {
-    console.log(`handleAllowedAgesAnyChange: ${event.target.id} : ${event.target.checked}`);
-  };
-
-  function capsAllWords(sentence) {
-    const sentenceProper = sentence 
-      .split(" ") 
-      .map(([ firstLetter, ...otherLetters ]) => `${firstLetter.toUpperCase()}${otherLetters.join("")}`)
-      .join(" ");
-    return sentenceProper;
-  }
 
   function setAllRankCheckBoxes(checked) {
     whiteCheckBoxRef.current.checked  = checked;
@@ -155,7 +163,13 @@ function ClassDetailsCard({editMode, handleReturnClick}) {
     brownCheckBoxRef.current.checked  = checked;
     blackCheckBoxRef.current.checked  = checked;
   }
-
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  const handleAllowedAgesBlur = (event) => {
+    console.log(`handleAllowedAgesBlur: ${event.target.id} : ${event.target.value}`);
+    const tmpClassFields = { ...classFields };
+    tmpClassFields['allowedAges'] = event.target.value;
+    setClassFields(tmpClassFields);    
+  };
 
   // -------------------------------------------------------------------------------
   return (
@@ -199,7 +213,7 @@ function ClassDetailsCard({editMode, handleReturnClick}) {
               id="styleNum"
               onChange={(e) => handleStyleNameChange(e)}
               defaultValue={'1'}
-            >
+              ref={frmStyleNumRef}>
               <option value="1">Okinawan Shorin-Ryu</option>
               <option value="2">Chanbara</option>
               <option value="3">Batto-Do Koshiden Ken Ryu</option>
@@ -214,7 +228,8 @@ function ClassDetailsCard({editMode, handleReturnClick}) {
             <Form.Select 
               aria-label="Default select example"
               value={classFields.dayOfWeekNum}
-              disabled={true}>
+              disabled={true}
+              ref={frmDayOfWeekRef}>
               <option value="0">Sunday</option>
               <option value="1">Monday</option>
               <option value="2">Tuesday</option>
@@ -234,9 +249,11 @@ function ClassDetailsCard({editMode, handleReturnClick}) {
                 id="startTime"
                 ref={frmClassStartTimeRef}
                 placeholder="HH:MM AM/PM"
+                defaultValue={classFields.startTime}
                 className={`d-inline-block float-left`}
                 size="sm"
                 onBlur={(e) => handleClassStartTimeBlur(e)}
+                onChange={(e) => handleClassStartTimeBlur(e)}
               />                
             </div>
           </div>
@@ -255,11 +272,28 @@ function ClassDetailsCard({editMode, handleReturnClick}) {
                 type="text"
                 onBlur={(e) => handleClassDurationBlur(e)}
                 maxLength="3"
+                ref={frmClassDurationRef}
               />       
             </div>
             <label class="col-sm-3 col-form-label">
                 Minutes
               </label>
+          </div>
+          <div class="form-group row mt-2">
+            <label for="inputFinisTime" class="col-sm-3 col-form-label">
+              Start Time
+            </label>
+            <div class="col-sm-6">
+            <Form.Control
+                id="finisTime"
+                ref={frmClassFinisTimeRef}
+                placeholder="HH:MM AM/PM"
+                defaultValue={classFields.finisTime}
+                className={`d-inline-block float-left`}
+                size="sm"
+                disabled={true}
+              />                
+            </div>
           </div>
 
           <div class="form-group row mt-2">
@@ -361,49 +395,12 @@ function ClassDetailsCard({editMode, handleReturnClick}) {
                 defaultValue={classFields.allowedAges}
                 className={`d-inline-block float-left `}
                 size="sm"
-                type="number"
+                type="text"
+                onBlur={(e) => handleAllowedAgesBlur(e)}
+                ref={frmAllowedAgesRef}
               />                
-
-              {/* <Form.Check
-                style={{width: "4rem"}}
-                inline
-                type={'checkbox'}
-                id={`allowedAgesChk`}
-                label={`Any`}
-                onChange={(e) => handleAllowedAgesAnyChange(e)}
-                ref={blackCheckBoxRef}
-              />
-              <label for="inputClassDuration" class="col-form-label me-2">
-                Min
-              </label>
-              <Form.Control
-                inline
-                style={{width: "3rem"}}
-                placeholder="4"
-                defaultValue={classFields.allowedAges}
-                className={`d-inline-block float-left `}
-                size="sm"
-                type="number"
-              />                
-              <label for="inputClassDuration" class="col-form-label ms-4 me-2">
-                Max
-              </label>
-              <Form.Control
-                inline
-                style={{width: "3rem"}}
-                placeholder="99"
-                defaultValue={classFields.allowedAges}
-                className={`d-inline-block float-left`}
-                size="sm"
-                type="number"
-              />                 */}
             </div>
           </div>
-
-
-  {/* const allowedAgesLowerRef  = useRef(null);
-  const allowedAgesUpperRef  = useRef(null); */}
-
           <div class="mt-4 ms-4">
           <Button
             variant="success"
@@ -411,6 +408,7 @@ function ClassDetailsCard({editMode, handleReturnClick}) {
             style={{ width: "9rem" }}
             size="sm"
             onClick={(e) => handleSaveClick()}
+            ref={saveButtonRef}
           >Save Class Schedule
           </Button>            
           <Form.Label

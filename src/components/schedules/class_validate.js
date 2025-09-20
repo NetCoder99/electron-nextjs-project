@@ -27,11 +27,37 @@ function isClassDurationValid(classDuration) {
 
 function calcClassEndTime(strStartTime, classDuration) {
   console.log(`calcClassEndTime`); 
-  if (!isStartTimeValid(strStartTime).status || !isClassDurationValid(classDuration).status) {
-    return null;
+  if (isStartTimeValid(strStartTime).status && isClassDurationValid(classDuration).status) {
+    let dateObject = new Date(timeStampToDate(strStartTime));
+    dateObject.setMinutes(dateObject.getMinutes() + classDuration);
+    console.log(`calcClassEndTime:timestamp:${dateObject.getHours()}:${dateObject.getMinutes()}`);
+    return timeStampDisplay(dateObject);
   }
-
 }
+
+function timeStampToDate(timeString ) {
+  const now        = new Date();
+  const year       = now.getFullYear();
+  const month      = now.getMonth();
+  const day        = now.getDate();
+  const fullDateTimeString = `${year}-${month + 1}-${day} ${timeString}`;
+  const dateObject = new Date(fullDateTimeString);
+  return dateObject;
+}
+
+function timeStampDisplay(dateObject) {
+  if (dateObject.getHours() > 12) {
+    return (  dateObject.getHours() - 12).toString() 
+            + ":" 
+            + dateObject.getMinutes()
+            + " PM";
+  } else {
+    return (  dateObject.getHours()).toString() 
+            + ":" 
+            + dateObject.getMinutes()
+            + " AM";
+  }
+} 
 
 function parseTime(timeString) {
   const [hours, minutes, seconds = 0] = timeString.split(':').map(Number);
