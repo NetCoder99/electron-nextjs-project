@@ -55,6 +55,7 @@ export default function manageCheckins() {
 
   // ----------------------------------------------------------------------
   function processCheckinResponse(searchResponse) {
+    console.log(`processCheckinResponse`);
     const seqNo    = checkinMessage.seqNo + 1;
     const checkinMessageTmp = {...checkinMessage};
     if (searchResponse.status == 'ok') {
@@ -63,6 +64,7 @@ export default function manageCheckins() {
       checkinMessageTmp.message         = searchResponse.message;
       checkinMessageTmp.checkinDateTime = searchResponse.checkinDateTime;
       checkinMessageTmp.nextPromotion   = searchResponse.nextPromotion;
+      checkinMessageTmp.classesAttended = searchResponse.classesAttended;
       checkinMessageTmp.imageSrc        = imageSrc;
       checkinMessageTmp.responseClass   = '';
       setCheckinMessage(checkinMessageTmp);
@@ -72,6 +74,7 @@ export default function manageCheckins() {
       checkinMessageTmp.message         = searchResponse.message;
       checkinMessageTmp.checkinDateTime = null;
       checkinMessageTmp.nextPromotion   = null;
+      checkinMessageTmp.classesAttended = null;
       checkinMessageTmp.imageSrc        = imageSrc;
       checkinMessageTmp.responseClass   = 'text-danger';
       setCheckinMessage(checkinMessageTmp);
@@ -160,7 +163,7 @@ export default function manageCheckins() {
                 <td className="fw-bold ps-4">{checkinMessage.checkinDateTime}</td>
               </tr>
               <tr>
-                <td className="fw-bold ps-4">{checkinMessage.nextPromotion}</td>
+                <td className="fw-bold ps-4">{checkinMessage.classesAttended}</td>
               </tr>
             </tbody>
           </table>

@@ -85,6 +85,7 @@ function insertCheckinRecord(badgeNumber) {
     const crnt_datetime = new Date();crnt_datetime.toISOString().replace('T', ' ')
     checkinReturnData.checkinDateTime    = formatDateWithDay(crnt_datetime); 
     checkinReturnData.nextPromotion      = `Next promotion: *** classes`;
+    checkinReturnData.classesAttended    = `Classes attended: ${getAttendanceCount(badgeNumber)}`;
     checkinReturnData.studentImageType   = studentData.studentImageType;
     checkinReturnData.studentImageBase64 = studentData.studentimageBase64;
     return checkinReturnData;
@@ -95,6 +96,24 @@ function insertCheckinRecord(badgeNumber) {
     checkinReturnData.message = `Internal errror: ${err.message}!`;
     checkinReturnData.checkinDateTime = checkinDateFields.checkinDateTime;
     return checkinReturnData;
+  } 
+}
+
+const getAttendanceCountStmt = `
+  select count(*) as attendanceCount
+  from   attendance
+  where  badgeNumber = :badgeNumber
+`
+function getAttendanceCount(badgeNumber) {
+  try {
+    const db_directory = getDatabaseLocation();
+    const db           = new sqlite3(db_directory); 
+    const searchStmt   = db.prepare(getAttendanceCountStmt);
+    const row          = searchStmt.get({'badgeNumber' : badgeNumber});
+    db.close();
+    return row.attendanceCount;
+  } catch (err) {
+    console.error('Error updating student data', err); throw err; 
   } 
 }
 

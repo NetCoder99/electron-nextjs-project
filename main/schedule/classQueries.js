@@ -54,7 +54,7 @@ const checkOverlapStmt = `
   from   classes
   where  classDayOfWeek = :dayOfWeekNum
 `
-function checkForClassOverlap(classDetails) {
+function getClassOverlap(classDetails) {
   try {
     const db_directory = getDatabaseLocation();
     const db           = new sqlite3(db_directory); 
@@ -145,6 +145,6 @@ function saveClassDetails(classData) {
 module.exports = {
   getClassDetailsByNum,
   getClassDetailsByName,
-  checkForClassOverlap,
+  getClassOverlap,
   saveClassDetails,
 }

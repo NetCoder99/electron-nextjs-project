@@ -24,8 +24,6 @@ function ClassDetailsCard({editMode, handleReturnClick}) {
   const brownCheckBoxRef  = useRef(null);
   const blackCheckBoxRef  = useRef(null);
   
-
-
   const [classFields, setClassFields] = useState({
     className: "Chanbara",
     styleNum: "1",
@@ -204,7 +202,7 @@ function ClassDetailsCard({editMode, handleReturnClick}) {
             </div>
           </div>
           <div class="form-group row mt-2">
-            <label for="inputStyleNum" class="col-sm-3 col-form-label">
+            <label class="col-sm-3 col-form-label">
               Style Name
             </label>
             <div class="col-sm-6">
@@ -221,7 +219,7 @@ function ClassDetailsCard({editMode, handleReturnClick}) {
             </div>
           </div>
           <div class="form-group row mt-2">
-            <label for="inputStyleNum" class="col-sm-3 col-form-label">
+            <label class="col-sm-3 col-form-label">
               Day of week
             </label>
             <div class="col-sm-6">
@@ -241,7 +239,7 @@ function ClassDetailsCard({editMode, handleReturnClick}) {
             </div>
           </div>
           <div class="form-group row mt-2">
-            <label for="inputStartTime" class="col-sm-3 col-form-label">
+            <label class="col-sm-3 col-form-label">
               Start Time
             </label>
             <div class="col-sm-6">
@@ -280,7 +278,7 @@ function ClassDetailsCard({editMode, handleReturnClick}) {
               </label>
           </div>
           <div class="form-group row mt-2">
-            <label for="inputFinisTime" class="col-sm-3 col-form-label">
+            <label class="col-sm-3 col-form-label">
               Start Time
             </label>
             <div class="col-sm-6">
@@ -297,7 +295,7 @@ function ClassDetailsCard({editMode, handleReturnClick}) {
           </div>
 
           <div class="form-group row mt-2">
-            <label for="inputClassDuration" class="col-sm-3 col-form-label">
+            <label class="col-sm-3 col-form-label">
               Allowed ranks
             </label>
             <div class="col-sm-6">
@@ -385,7 +383,7 @@ function ClassDetailsCard({editMode, handleReturnClick}) {
           </div>
 
           <div class="form-group row mt-2">
-            <label for="inputClassDuration" class="col-sm-3 col-form-label">
+            <label class="col-sm-3 col-form-label">
               Allowed Ages
             </label>
             <div class="col-sm-6">

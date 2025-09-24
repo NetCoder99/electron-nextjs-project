@@ -45,7 +45,7 @@ function validateClassFields(classData) {
     classData.classNameClass = 'invalid';
     classData.saveResult     = 'text-danger';
     classData.saveMessage    = err.toString();    
-    console.log(`validateClassFields failed: ${JSON.stringify(classData)}`);
+    console.err(`validateClassFields failed: ${JSON.stringify(classData)}`);
     return classData;
   }
 }
@@ -80,7 +80,6 @@ function classAlreadyExists(className) {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-const {checkForClassOverlap}      = require(path.join(__dirname, 'classQueries'));
 function validateStartTime(classData) {
   const pattern = /^[1]?[0-9]:[0-5][0-9] (AM|PM)/;
   if (isFieldNull(classData.startTime) ) {
@@ -99,7 +98,7 @@ function validateStartTime(classData) {
       classData.focusField  = 'className';
       classData.saveMessage = "Error: Start time format is not valid!";
     }
-  } else if (checkForClassOverlap(classData).isOverlapping === 'true') {
+  } else if (checkForClassOverlap(classData)) {
     classData.validity       = 'err';
     classData.startTimeClass = 'invalid';
     classData.saveResult     = 'text-danger';
@@ -110,6 +109,21 @@ function validateStartTime(classData) {
   } else {
     classData.startTimeClass = 'valid';
   }
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+const {getClassOverlap}      = require(path.join(__dirname, 'classQueries'));
+function checkForClassOverlap(classData) {
+  const classOverlap = getClassOverlap(classData);
+  if (!classOverlap) {
+    return false;
+  }
+  else if(classOverlap.isOverlapping === 'false') {
+    return false;
+  }  
+  else {
+    return true;
+  }  
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

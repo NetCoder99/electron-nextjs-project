@@ -6,7 +6,27 @@ import Image from "react-bootstrap/Image";
 import Select from "react-select";
 import ClassDetailsCard from "@/components/schedules/class_details";
 
-export default function manageAttenance() {
+export default function manageClassSchedules() {
+  const [weekDays, setWeekDays] = useState({ });
+
+  // -------------------------------------------------------------------------------
+  // useEffect(() => {
+  //   console.log(`manageClassSchedules:useEffect`);
+  //   const daysOfWeekResponse = window.electronAPI.invokeMain("handleGetDaysOfWeek");
+  //   console.log(`manageClassSchedules:daysOfWeekResponse: ${JSON.stringify(daysOfWeekResponse)}`);
+  // }, []);  
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const daysOfWeekResponse = await window.electronAPI.invokeMain("handleGetDaysOfWeek");
+        console.log(`manageClassSchedules:daysOfWeekResponse: ${JSON.stringify(daysOfWeekResponse)}`);        
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    })();
+  }, []);
+
   // ----------------------------------------------------------------------
   // const [searchData, setSearchData] = useState({
   //   firstName: "",

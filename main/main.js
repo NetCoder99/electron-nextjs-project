@@ -107,6 +107,12 @@ ipcMain.handle('handleGetPromotions', async (event, badgeData) => {
 })
 
 // --------------------------------------------------------------------------
+const {getDaysOfWeek}      = require(path.join(__dirname, 'schedule', 'scheduleQueries'));
+ipcMain.handle('handleGetDaysOfWeek', async (event) => {
+  console.log(`handleGetDaysOfWeek`);
+  const daysResponse = getDaysOfWeek();
+  return daysResponse;
+})
 ipcMain.handle('handleSaveClassSchedule', async (event, classData) => {
   console.log(`handleSaveClassSchedule: ${classData}`);
 })
