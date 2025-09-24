@@ -107,18 +107,25 @@ ipcMain.handle('handleGetPromotions', async (event, badgeData) => {
 })
 
 // --------------------------------------------------------------------------
-const {getDaysOfWeek}      = require(path.join(__dirname, 'schedule', 'scheduleQueries'));
-ipcMain.handle('handleGetDaysOfWeek', async (event) => {
-  console.log(`handleGetDaysOfWeek`);
-  const daysResponse = getDaysOfWeek();
-  return daysResponse;
+const {getClassesByWeek}      = require(path.join(__dirname, 'schedule', 'scheduleQueries'));
+ipcMain.handle('handleGetClassesByWeek', async (event) => {
+  console.log(`handleGetClassesByWeek`);
+  const classesByWeek = getClassesByWeek();
+  return classesByWeek;
 })
-ipcMain.handle('handleSaveClassSchedule', async (event, classData) => {
-  console.log(`handleSaveClassSchedule: ${classData}`);
+const {getClassesByDay}      = require(path.join(__dirname, 'schedule', 'scheduleQueries'));
+ipcMain.handle('handleGetClassesByDay', async (event, dayOfWeek) => {
+  console.log(`handleGetClassesByDay`);
+  const classesByWeek = getClassesByDay();
+  return classesByWeek;
 })
-ipcMain.handle('handleDisplayClassDetails', async (event, classData) => {
-  console.log(`handleDisplayClassDetails: ${classData}`);
-})
+
+// ipcMain.handle('handleSaveClassSchedule', async (event, classData) => {
+//   console.log(`handleSaveClassSchedule: ${classData}`);
+// })
+// ipcMain.handle('handleDisplayClassDetails', async (event, classData) => {
+//   console.log(`handleDisplayClassDetails: ${classData}`);
+// })
 
 // --------------------------------------------------------------------------
 const {validateClassFields}      = require(path.join(__dirname, 'schedule', 'classValidate'));
