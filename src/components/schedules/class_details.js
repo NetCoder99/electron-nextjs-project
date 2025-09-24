@@ -53,14 +53,11 @@ function ClassDetailsCard({editMode, handleReturnClick}) {
     const fieldData = gatherFieldData();
     const saveResponse = await window.electronAPI.invokeMain(
       "handleSaveClassDetails",
-      classFields
+      fieldData
     );
     console.log(`handleSaveClick saveResponse: ${JSON.stringify(saveResponse)}`);
     setClassFields(saveResponse);
     saveButtonRef.current.disabled = false;
-    // if (saveResponse.focusField) {
-    //   inputRefs.current[saveResponse.focusField].focus();
-    // }
   };
   function gatherFieldData() {
     console.log(`gatherFieldData`);

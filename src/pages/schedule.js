@@ -4,52 +4,32 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Image from "react-bootstrap/Image";
 import Select from "react-select";
+import ScheduleListCard from "@/components/schedules/schedule_card";
 import ClassDetailsCard from "@/components/schedules/class_details";
 
 export default function manageClassSchedules() {
-  const [weekDays, setWeekDays] = useState({ });
+  const [classesByWeek, setClassesByWeek] = useState([{ }]);
 
   // -------------------------------------------------------------------------------
-  // useEffect(() => {
-  //   console.log(`manageClassSchedules:useEffect`);
-  //   const daysOfWeekResponse = window.electronAPI.invokeMain("handleGetDaysOfWeek");
-  //   console.log(`manageClassSchedules:daysOfWeekResponse: ${JSON.stringify(daysOfWeekResponse)}`);
-  // }, []);  
-
   useEffect(() => {
-    (async () => {
-      try {
-        const daysOfWeekResponse = await window.electronAPI.invokeMain("handleGetDaysOfWeek");
-        console.log(`manageClassSchedules:daysOfWeekResponse: ${JSON.stringify(daysOfWeekResponse)}`);        
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    })();
+    console.log(`manageClassSchedules useEffect invoked`);
+    const fetchData = async () => {
+      console.log(`manageRanks fetching data`);
+      const response = await window.electronAPI.invokeMain('handleGetClassesByWeek');
+      console.log(`manageRanks fetching response: ${response}`);
+      setClassesByWeek(response);
+    };
+    fetchData();
+    return () => {};
   }, []);
-
-  // ----------------------------------------------------------------------
-  // const [searchData, setSearchData] = useState({
-  //   firstName: "",
-  //   lastName: "",
-  //   badgeNumber: "",
-  // });
+  
+  
   const [editMode, setEditMode] = useState({
     isCreating: false,
     isEditing: false,
     isSearching: true,
     dayOfWeek: -1
   });
-
-  // const [classFields, setClassFields] = useState({
-  //   classNum: -1,
-  //   className: "",
-  //   classDayOfWeek: "",
-  //   classStartTime: "",
-  //   classDuration: "",
-  //   allowedRanks: "",
-  //   classDisplayTitle: "",
-  //   allowedAges: "",
-  // });
 
   const handleAddClassClick = async (dayOfWeek) => {
     console.log(`handleAddClassClick: `);
@@ -67,6 +47,12 @@ export default function manageClassSchedules() {
           <h1 className="text-center">Class schedules manager.</h1>
 
           <hr />
+
+          <ul style={{ listStyleType: 'none'}}>
+            {classesByWeek.map((item, index) => (
+              <li key={index}><ScheduleListCard {...item}></ScheduleListCard></li>  
+            ))}
+          </ul>
 
           <div className="row mb-3">
             <div className="col-md-3">Sunday</div>
