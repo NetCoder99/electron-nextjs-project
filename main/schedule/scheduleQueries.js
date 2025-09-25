@@ -3,8 +3,9 @@ const sqlite3  = require('better-sqlite3');
 const {getDatabaseLocation}     = require(path.join(__dirname, '..', 'data', 'common'));
 
 const daysOfWeekStmt = `
-  select dayOfWeek, dayName 
+  select dayOfWeek, cast(dayOfWeek as integer) as dayNum, dayName 
   from   vw_days_of_week vdow 
+  limit 3
 `
 // ----------------------------------------------------------------------------------------------
 function getDaysOfWeek() {
@@ -66,16 +67,17 @@ const getClassesByDayStmt = `
   from   vw_days_of_week vdow 
   left   join   classes c 
     on   vdow.dayOfWeek = c.classDayOfWeek 
-  where  vdow.dayOfWeek = :dayOfWeek
+  where  cast(vdow.dayOfWeek as integer) = :dayNum
   order  by vdow.dayOfWeek,c.classStartTime  
 `
 // ----------------------------------------------------------------------------------------------
 function getClassesByDay(dayOfWeek) {
   try {
+    console.log(`getClassesByDay: ${JSON.stringify(dayOfWeek)}`);
     const db_directory = getDatabaseLocation();
     const db           = new sqlite3(db_directory); 
-    const searchStmt   = db.prepare(getClassesByWeekStmt);
-    const rows         = searchStmt.all({'dayOfWeek' : dayOfWeek});
+    const searchStmt   = db.prepare(getClassesByDayStmt);
+    const rows         = searchStmt.all({'dayNum' : dayOfWeek});
     db.close();
     return rows;
   } catch (err) {

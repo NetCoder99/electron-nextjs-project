@@ -1,27 +1,60 @@
 import React from "react";
-import { useState, useEffect, useRef } from "react";
-import Form from "react-bootstrap/Form";
+import { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
-import Image from "react-bootstrap/Image";
-import Select from "react-select";
 import ScheduleListCard from "@/components/schedules/schedule_card";
 import ClassDetailsCard from "@/components/schedules/class_details";
 
 export default function manageClassSchedules() {
-  const [classesByWeek, setClassesByWeek] = useState([{ }]);
+  const [daysOfWeek,    setDaysOfWeek]    = useState([
+    {
+      "dayOfWeek": "0",
+      "dayNum": 0,
+      "dayName": "Sunday"
+    },
+    {
+      "dayOfWeek": "1",
+      "dayNum": 1,
+      "dayName": "Monday"
+    },
+    {
+      "dayOfWeek": "2",
+      "dayNum": 2,
+      "dayName": "Tuesday"
+    },
+    {
+      "dayOfWeek": "3",
+      "dayNum": 3,
+      "dayName": "Wednesday"
+    },
+    {
+      "dayOfWeek": "4",
+      "dayNum": 4,
+      "dayName": "Thursday"
+    },
+    {
+      "dayOfWeek": "5",
+      "dayNum": 5,
+      "dayName": "Friday"
+    },
+    {
+      "dayOfWeek": "6",
+      "dayNum": 6,
+      "dayName": "Saturday"
+    }
+  ]);
 
-  // -------------------------------------------------------------------------------
-  useEffect(() => {
-    console.log(`manageClassSchedules useEffect invoked`);
-    const fetchData = async () => {
-      console.log(`manageRanks fetching data`);
-      const response = await window.electronAPI.invokeMain('handleGetClassesByWeek');
-      console.log(`manageRanks fetching response: ${response}`);
-      setClassesByWeek(response);
-    };
-    fetchData();
-    return () => {};
-  }, []);
+  // // -------------------------------------------------------------------------------
+  // useEffect(() => {
+  //   console.log(`manageClassSchedules useEffect invoked`);
+  //   const fetchData = async () => {
+  //     console.log(`manageClassSchedules fetching data`);
+  //     const daysOfWeekRspnse  = await window.electronAPI.invokeMain('handleGetDaysOfWeek');
+  //     daysOfWeekRspnse.forEach(dayEntry => console.log(`daysOfWeekRspnse: ${JSON.stringify(dayEntry)}`));
+  //     setDaysOfWeek(daysOfWeekRspnse);
+  //   };
+  //   fetchData();
+  //   return () => {};
+  // }, []);
   
   
   const [editMode, setEditMode] = useState({
@@ -48,13 +81,24 @@ export default function manageClassSchedules() {
 
           <hr />
 
+          {/* <ul style={{ listStyleType: 'none'}}>
+            {daysOfWeek.map((item, index) => (
+              <li key={index}>{item.dayNum}:{item.dayOfWeek}</li>  
+            ))}
+          </ul> */}
+
           <ul style={{ listStyleType: 'none'}}>
-            {classesByWeek.map((item, index) => (
-              <li key={index}><ScheduleListCard {...item}></ScheduleListCard></li>  
+            {daysOfWeek.map((item, index) => (
+              <li key={index}>
+                <ScheduleListCard 
+                  dayOfWeekProps      = {...item}
+                  handleAddClassClick = {handleAddClassClick}>
+                </ScheduleListCard>
+              </li>  
             ))}
           </ul>
 
-          <div className="row mb-3">
+          {/* <div className="row mb-3">
             <div className="col-md-3">Sunday</div>
             <div className="col-md-3">
               <Button
@@ -133,7 +177,7 @@ export default function manageClassSchedules() {
               </Button>
             </div>
             <div className="col-md-6"></div>
-          </div>
+          </div> */}
 
           <hr className="my-3" />
         </div>

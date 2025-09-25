@@ -113,10 +113,17 @@ ipcMain.handle('handleGetClassesByWeek', async (event) => {
   const classesByWeek = getClassesByWeek();
   return classesByWeek;
 })
+const {getDaysOfWeek}      = require(path.join(__dirname, 'schedule', 'scheduleQueries'));
+ipcMain.handle('handleGetDaysOfWeek', async (event) => {
+  console.log(`handleGetDaysOfWeek`);
+  const daysOfWeek = getDaysOfWeek();
+  return daysOfWeek;
+})
 const {getClassesByDay}      = require(path.join(__dirname, 'schedule', 'scheduleQueries'));
 ipcMain.handle('handleGetClassesByDay', async (event, dayOfWeek) => {
-  console.log(`handleGetClassesByDay`);
-  const classesByWeek = getClassesByDay();
+  console.log(`handleGetClassesByDay: ${JSON.stringify(dayOfWeek)}`);
+  const classesByWeek = getClassesByDay(dayOfWeek.dayNum);
+  console.log(`handleGetClassesByDay:classesByWeek: ${JSON.stringify(classesByWeek)}`);
   return classesByWeek;
 })
 
