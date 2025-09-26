@@ -14,6 +14,15 @@ function getDatabaseLocation() {
   return dbFullPath;
 }
 
+//---------------------------------------------------------------
+function getDatabaseConnection() {
+  const dbFullPath = path.join(shared_folder, 'Attendance', 'AttendanceV2.db');
+  return dbFullPath;
+}
 
-module.exports = {getDatabaseLocation, getSharedPath};
+module.exports = {
+  getDatabaseLocation, 
+  getDatabaseConnection,
+  getSharedPath
+};
 

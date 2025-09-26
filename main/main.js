@@ -126,6 +126,12 @@ ipcMain.handle('handleGetClassesByDay', async (event, dayOfWeek) => {
   console.log(`handleGetClassesByDay:classesByWeek: ${JSON.stringify(classesByWeek)}`);
   return classesByWeek;
 })
+const {delClass}             = require(path.join(__dirname, 'schedule', 'scheduleQueries'));
+ipcMain.handle('handleDelClass', async (event, classNum) => {
+  console.log(`handleDelClass: ${classNum}`);
+  const classesByWeek = delClass(classNum);
+  return classesByWeek;
+})
 
 // ipcMain.handle('handleSaveClassSchedule', async (event, classData) => {
 //   console.log(`handleSaveClassSchedule: ${classData}`);

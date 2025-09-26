@@ -29,10 +29,20 @@ function calcClassEndTime(strStartTime, classDuration) {
   console.log(`calcClassEndTime`); 
   if (isStartTimeValid(strStartTime).status && isClassDurationValid(classDuration).status) {
     let dateObject = new Date(timeStampToDate(strStartTime));
-    dateObject.setMinutes(dateObject.getMinutes() + classDuration);
-    console.log(`calcClassEndTime:timestamp:${dateObject.getHours()}:${dateObject.getMinutes()}`);
-    return timeStampDisplay(dateObject);
+    const finisDate = addMinutesToTime(dateObject, classDuration);
+    //dateObject.setMinutes(dateObject.getMinutes() + classDuration);
+    console.log(`calcClassEndTime:timestamp:${finisDate.getHours()}:${finisDate.getMinutes()}`);
+    return timeStampDisplay(finisDate);
   }
+}
+
+function addMinutesToTime(date, minutesToAdd) {
+
+  // Create a new Date object to avoid modifying the original date directly
+  const newDate = new Date(date); 
+  // Get the current minutes and add the desired minutes
+  newDate.setMinutes(newDate.getMinutes() + parseInt(minutesToAdd));
+  return newDate;
 }
 
 function timeStampToDate(timeString ) {

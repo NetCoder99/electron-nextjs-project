@@ -53,6 +53,7 @@ const checkOverlapStmt = `
          end  as isOverlapping     
   from   classes
   where  classDayOfWeek = :dayOfWeekNum
+  and   :startTime between classStartTime and classFinisTime
 `
 function getClassOverlap(classDetails) {
   try {
