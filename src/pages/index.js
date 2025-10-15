@@ -22,6 +22,7 @@ export default function manageCheckins() {
     'seqNo'           : 0,
     'message'         : 'Waiting...',
     'checkinDateTime' : ' ',
+    'className'       : ' ',
     'nextPromotion'   : ' ',
     'imageSrc'        : "/misc_images/RSM_Footer.jpg",
     'responseClass'   : ''
@@ -29,8 +30,6 @@ export default function manageCheckins() {
 
   // -------------------------------------------------------------------------------
   useEffect(() => {
-    //if (inputRef.current) {inputRef.current.focus();};
-
     setInterval(() => {
       const displayDate = getDisplayDate();
       const badgeDataTmp = {...badgeData};
@@ -65,6 +64,7 @@ export default function manageCheckins() {
       checkinMessageTmp.checkinDateTime = searchResponse.checkinDateTime;
       checkinMessageTmp.nextPromotion   = searchResponse.nextPromotion;
       checkinMessageTmp.classesAttended = searchResponse.classesAttended;
+      checkinMessageTmp.className       = searchResponse.className;
       checkinMessageTmp.imageSrc        = imageSrc;
       checkinMessageTmp.responseClass   = '';
       setCheckinMessage(checkinMessageTmp);
@@ -75,6 +75,7 @@ export default function manageCheckins() {
       checkinMessageTmp.checkinDateTime = null;
       checkinMessageTmp.nextPromotion   = null;
       checkinMessageTmp.classesAttended = null;
+      checkinMessageTmp.className       = null;
       checkinMessageTmp.imageSrc        = imageSrc;
       checkinMessageTmp.responseClass   = 'text-danger';
       setCheckinMessage(checkinMessageTmp);
@@ -89,6 +90,7 @@ export default function manageCheckins() {
     checkinMessageTmp.seqNo           = seqNo;
     checkinMessageTmp.message         = 'Waiting...';
     checkinMessageTmp.checkinDateTime = null;
+    checkinMessageTmp.className       = null;
     checkinMessageTmp.nextPromotion   = null;
     checkinMessageTmp.imageSrc        = "/misc_images/RSM_Footer.jpg";
     checkinMessageTmp.responseClass   = '';
@@ -146,24 +148,27 @@ export default function manageCheckins() {
 
       <div className="row mt-5">
         <div className="col-md-1"></div>
-        <div className="col-md-10  mx-auto border rounded-5 ps-5 pt-4 pb-3 checkinResponse">
+        <div className="col-md-10  mx-auto border rounded-5 ps-1 pt-4 pb-3 checkinResponse">
           <table className="checkin-table col-md-10 mx-auto ">
             <tbody>
               <tr>
-                <td rowSpan="3" style={{ width: "9rem;" }}>
+                <td rowSpan="4" style={{ width: "7rem;" }}>
                   <Image
                     src={checkinMessage.imageSrc}
                     rounded
                     style={{ height: "95px" }}
                   />
                 </td>
-                <td className={`fw-bold ${checkinMessage.responseClass}`}>{checkinMessage.message}</td>
+                <td className={`fw-bold border-bottom ${checkinMessage.responseClass}`}>{checkinMessage.message}</td>
               </tr>
               <tr>
-                <td className="fw-bold ps-4">{checkinMessage.checkinDateTime}</td>
+                <td className="fw-bold ps-2 border-bottom">{checkinMessage.className}</td>
               </tr>
               <tr>
-                <td className="fw-bold ps-4">{checkinMessage.classesAttended}</td>
+                <td className="fw-bold ps-2 border-bottom">{checkinMessage.checkinDateTime}</td>
+              </tr>
+              <tr>
+                <td className="fw-bold ps-2">{checkinMessage.classesAttended}</td>
               </tr>
             </tbody>
           </table>

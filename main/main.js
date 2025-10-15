@@ -91,7 +91,8 @@ ipcMain.handle('handleCreateBadge', async (event, data) => {
 // --------------------------------------------------------------------------
 const {insertCheckinRecord}           = require(path.join(__dirname, 'attendance', 'attendanceProcs'));
 ipcMain.handle('handleCheckin', async (event, data) => {
-  return insertCheckinRecord(data);
+  const checkinResponse = insertCheckinRecord(data);
+  return checkinResponse;
 })
 
 const {GetWeekEndDates}           = require(path.join(__dirname, 'attendance', 'attendanceSearch'));
